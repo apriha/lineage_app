@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}About{% endblock %}
+
+{% block content %}
+<div class="row justify-content-md-center">
+    <div class="col-md-8">
+        <h2>About</h2>
+        <p><a href="{% url 'index' %}">lineage.app</a> makes available the capabilities of the
+            open source <a href="https://github.com/apriha/lineage">lineage</a> Python
+            package. Specifically, users can use <a href="{% url 'index' %}">lineage.app</a> to
+        </p>
+        <ul>
+            <li> Merge raw data files from different DNA testing companies, identifying discrepant
+                SNPs in the process
+            </li>
+            <li>Compute centiMorgans (cMs) of shared DNA between individuals using the HapMap Phase
+                II genetic map
+            </li>
+            <li>Plot shared DNA between individuals</li>
+            <li>Determine genes shared between individuals (i.e., genes transcribed from shared DNA
+                segments)
+            </li>
+            <li>Find discordant SNPs between child and parent(s)</li>
+            <li>Remap SNPs between assemblies / builds (e.g., convert SNPs from Build 36 to
+                Build 37, etc.)
+            </li>
+        </ul>
+
+        <p><a href="{% url 'index' %}">lineage.app</a> is proudly
+            <a href="https://github.com/scedasticsoftware/lineage_app">open source</a>
+            and was developed thanks to a generous
+            <a href="https://www.openhumans.org/grants/">Project Grant</a>
+            from <a href="https://www.openhumans.org/">Open Humans</a>.</p>
+    </div>
+</div>
+{% endblock content %}

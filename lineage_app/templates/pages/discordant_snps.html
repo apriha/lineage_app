@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+
+{% block title %}Find Discordant SNPs{% endblock %}
+
+{% block content %}
+<div class="row justify-content-md-center">
+    <div class="col-md-12">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-row justify-content-md-center">
+                <div class="form-group col-md-3 mb-0">
+                    {{ form.individual1|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-3 mb-0">
+                    {{ form.individual2|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-3 mb-0">
+                    {{ form.individual3|as_crispy_field }}
+                </div>
+            </div>
+            <div class="form-row justify-content-md-center">
+                <div class="form-group col-md-3 mb-0"></div>
+                <div class="form-group col-md-3 mb-0"></div>
+                <div class="form-group col-md-3 mb-0">
+                    <button type="submit" class="btn btn-primary float-right">
+                        <i class="fas fa-users fa-fw"></i> Find Discordant SNPs
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        {% if table %}<h3>Results</h3>{% endif %}
+    </div>
+    <div class="col-md-6">
+        {% if finding_discordant_snps %}
+        <h4>
+            <span class="badge badge-pill badge-secondary float-right">
+                <a href="{% url 'discordant_snps' %}">
+                    <i class="fas fa-spinner fa-spin"></i> Finding Discordant SNPs...</a>
+            </span>
+        </h4>
+        {% endif %}
+    </div>
+</div>
+{% if table %}
+<div class="row">
+    {% render_table table %}
+</div>
+{% endif %}
+
+{% endblock content %}
+
+{% block jquery %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+{% endblock jquery %}
+
+{% block javascript %}
+<script>
+$(function () {
+    $("#id_individual1").change(function () {
+        var url = "{% url 'load_individual2_dropdown' %}";
+        var individualId = $(this).val();
+
+        $.ajax({
+            url: url,
+            data: {
+                'uuid': individualId
+            },
+            success: function (data) {
+                $("#id_individual2").html(data);
+                $("#id_individual3").html('<option value="">---------</option>');
+            }
+          });
+    });
+
+
+    $("#id_individual2").change(function () {
+        var url = "{% url 'load_individual3_dropdown' %}";
+        var individualId1 = $("#id_individual1").val();
+        var individualId2 = $(this).val();
+
+        $.ajax({
+            url: url,
+            data: {
+                'uuid1': individualId1,
+                'uuid2': individualId2
+            },
+            success: function (data) {
+                $("#id_individual3").html(data);
+            }
+          });
+    });
+
+});
+</script>
+{% endblock javascript %}

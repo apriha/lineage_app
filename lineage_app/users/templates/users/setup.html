@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Setup{% endblock %}
+
+{% block content %}
+
+<h2>Setup is currently in progress...</h2>
+<p>Please wait a few moments...</p>
+<div class='progress'>
+    <div id="progress-bar-celery" class="progress-bar progress-bar-striped progress-bar-animated"
+         role="progressbar"></div>
+</div>
+<div id="progress-bar-message">Waiting for setup to start...</div>
+
+{% endblock content %}
+
+
+{% block javascript %}
+<script src="{% static 'celery_progress/celery_progress.js' %}"></script>
+<script>
+
+// JQuery
+var taskUrl = "{% url 'celery_progress:task_status' task_id %}";
+
+function customProgress(progressBarElement, progressBarMessageElement, progress) {
+
+    progressBarElement.style.width = progress.percent + "%";
+
+if (progress.current == 1) {
+    progressBarMessageElement.innerHTML = 'Downloading files from Open Humans...';
+}
+else if (progress.current == 2) {
+    progressBarMessageElement.innerHTML = 'Analyzing raw data files...';
+}
+else if (progress.current == 3) {
+    progressBarMessageElement.innerHTML = 'Merging SNPs...';
+}
+else if (progress.current == 4) {
+    progressBarMessageElement.innerHTML = 'Remapping SNPs...';
+}
+else if (progress.current == 5) {
+    progressBarMessageElement.innerHTML = 'Uploading files to Open Humans...';
+}
+else if (progress.current == 6) {
+    progressBarMessageElement.innerHTML = 'Setup complete!';
+}
+
+}
+
+function customSuccess(progressBarElement, progressBarMessageElement) {
+// https://stackoverflow.com/a/2221180
+progressBarElement.className += " bg-success"
+    progressBarMessageElement.innerHTML = "Success!";
+    // https://stackoverflow.com/a/506004
+    window.location.replace("{% url 'index' %}");
+}
+
+CeleryProgressBar.initProgressBar(taskUrl, {
+    pollInterval: 1000,
+    progressBarId: "progress-bar-celery",
+    onProgress: customProgress,
+    onSuccess: customSuccess,
+});
+</script>
+
+{% endblock javascript %}

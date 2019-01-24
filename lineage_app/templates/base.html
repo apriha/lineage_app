@@ -1,0 +1,131 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="tools for genetic genealogy">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/favicons/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicons/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicons/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'images/favicons/site.webmanifest' %}">
+    <link rel="mask-icon" href="{% static 'images/favicons/safari-pinned-tab.svg' %}" color="#5bbad5">
+    <link rel="shortcut icon" href="{% static 'images/favicons/favicon.ico' %}">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="{% static 'images/favicons/browserconfig.xml' %}">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>lineage - {% block title %}{% endblock title %}</title>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.2.1/cerulean/bootstrap.min.css" rel="stylesheet" integrity="sha384-62+JPIF7fVYAPS4itRiqKa7VU321chxfKZRtkSY0tGoTwcUItAFEH/HGTpvDH6e6" crossorigin="anonymous">
+    <link href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" rel="stylesheet" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    {% block css %}
+    <link href="{% static 'css/project.css' %}" rel="stylesheet">
+    {% endblock css %}
+  </head>
+
+  <body>
+
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'index' %}">lineage</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbar">
+        {% if request.user.is_authenticated and request.user.setup_complete %}
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><a class="nav-link" href="{% url 'individuals' %}"><i class="fas fa-user-friends"></i> Individuals</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="{% url 'index' %}" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-microscope fa-fw"></i> Tools</a>
+            <div class="dropdown-menu" aria-labelledby="dropdown01">
+              <a class="dropdown-item" href="{% url 'shared_dna_genes' %}"><i class="fas fa-dna fa-fw"></i> Find Shared DNA and Genes</a>
+              <a class="dropdown-item" href="{% url 'discordant_snps' %}"><i class="fas fa-users fa-fw"></i> Find Discordant SNPs</a>
+            </div>
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a class="nav-link" href="{% url 'users:account' %}">Account</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'users:logout' %}">Log out <i class="fas fa-sign-out-alt"></i></a></li>
+        </ul>
+        {% elif request.user.is_authenticated %}
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><a class="nav-link" href="{% url 'users:setup' %}"><i class="fas fa-spinner fa-spin"></i> Setup</a></li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a class="nav-link" href="{% url 'users:logout' %}">Log out <i class="fas fa-sign-out-alt"></i></a></li>
+        </ul>
+        {% else %}
+        <ul class="navbar-nav ml-auto">
+          {% if debug %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'users:login_debug' %}">Debug Login <i class="fas fa-laptop-code"></i></a></li>
+          {% endif %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'users:login' %}">Get started / Login <i class="fas fa-sign-in-alt"></i></a></li>
+        </ul>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <main role="main">
+    {% block jumbotron %}{% endblock jumbotron %}
+    <div class="container">
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+        <button type="button" class="close" data-dismiss="alert"><i class="fas fa-times"></i></button>
+        {{ message }}
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      {% block content %}
+      {% endblock content %}
+    </div>
+  </main>
+
+  {% block modal %}{% endblock modal %}
+
+  <hr>
+
+  <footer class="container">
+    <div class="row">
+      <div class="col-3">
+        <p>
+          <small>&copy; 2019 Scedastic Software, LLC</small>
+        </p>
+      </div>
+      <div class="col-9 text-right">
+        <p>
+          <small>
+            <a href="{% url 'about' %}">About</a> |
+            <a href="{% url 'terms-of-use' %}">Terms of Use</a> |
+            <a href="{% url 'data-use-policy' %}">Data Use Policy</a> |
+            <a href="{% url 'acknowledgements' %}">Acknowledgements</a> |
+            <a href="https://github.com/apriha/lineage">lineage
+              <i class="fab fa-github"></i></a> |
+            <a href="https://github.com/scedasticsoftware/lineage_app">lineage.app
+              <i class="fab fa-github"></i></a>
+          </small>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  {% block jquery %}
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  {% endblock jquery %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  {% block javascript %}
+  {% endblock javascript %}
+
+  </body>
+</html>

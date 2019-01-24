@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}tools for genetic genealogy{% endblock title %}
+
+{% block css %}
+<link href="{% static 'css/jumbotron.css' %}" rel="stylesheet">
+{% endblock css %}
+
+{% block jumbotron %}
+<div class="jumbotron">
+    <div class="container">
+        <img class="container banner" src="{% static 'images/lineage_banner.png' %}">
+        <p class="lead">tools for genetic genealogy and the analysis of direct-to-consumer (DTC)
+            DNA test results - coming January 2019</p>
+    </div>
+</div>
+{% endblock jumbotron %}
+
+{% block content %}
+{% if request.user.is_authenticated and request.user.setup_complete %}
+
+<div class="row mb-4">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="{% url 'individuals' %}">Individuals</a>
+                <span class="badge badge-primary badge-pill">{{ request.user.individuals.count }}</span>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+
+{% else %}
+<div class="row">
+    <div class="col-md-4">
+        <h2><i class="fas fa-dna fa-fw"></i> Find Shared Genes</h2>
+        <p>Find and plot shared DNA between individuals using arbitrary SNP and cM thresholds, and
+            inspect the genes that are transcribed from those shared segments of DNA.</p>
+    </div>
+    <div class="col-md-4">
+        <h2><i class="fas fa-compress-arrows-alt"></i> Merge Raw Data</h2>
+        <p>Merge the raw data files from various testing companies, including <a
+                href="https://www.23andme.com/">23andMe</a>, <a
+                href="https://www.familytreedna.com/">Family Tree DNA</a>, and <a
+                href="https://www.ancestry.com/">AncestryDNA</a>. In the process, determine SNPs
+            that were tested differently between each company.</p>
+    </div>
+    <div class="col-md-4">
+        <h2><i class="fas fa-map fa-fw"></i> Remap SNPs</h2>
+        <p>Remap your SNPs between assemblies to ensure future portability of your data. The
+            latest assembly, or build, of the human genome is GRCh38 (Build 38); however, many DTC
+            DNA testing companies still use Build 37.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>...and more</h2>
+        <p><a href="https://github.com/apriha/lineage">lineage</a> is being developed as an open
+            source <a href="https://www.python.org">Python</a> project, with generous support from
+            <a href="https://www.openhumans.org">Open Humans</a>, and many new and exciting
+            <a href="https://github.com/apriha/lineage/issues">features</a> are planned for
+            implementation.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}

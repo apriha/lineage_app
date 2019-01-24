@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Individuals{% endblock %}
+
+{% block content %}
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+<div class="row align-items-center mb-2">
+    <div class="col-md-9">
+        <h2>Individuals</h2>
+    </div>
+    <div class="col-md-3">
+        <div class="float-right">
+            <a class="btn btn-success" href="{% url 'add_individual' %}">
+                <i class="fas fa-user-plus"></i> Add Individual</a>
+        </div>
+    </div>
+</div>
+
+{% if individuals|length == 0 %}
+<p>No Individuals currently associated with user...</p>
+{% else %}
+{% for individual in individuals %}
+{% include "pages/individual_card.html" %}
+{% endfor %}
+{% endif %}
+
+<div class="modal fade" id="modal-progress" tabindex="-1" role="dialog" aria-labelledby="uploadSnps" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Uploading...</h4>
+            </div>
+            <div class="modal-body">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block jquery %}{% endblock jquery %}
+{% block javascript %}
+{# JQUERY FILE UPLOAD SCRIPTS #}
+<script src="{% static 'js/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>
+{% endblock javascript %}

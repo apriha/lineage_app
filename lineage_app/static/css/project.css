@@ -1,0 +1,20 @@
+body {
+  padding-top: 5rem;
+}
+
+.table {
+  margin-bottom: 0px;
+}
+
+/* https://stackoverflow.com/a/36136412 */
+.table tr {
+    transition: background 0.1s ease-in;
+}
+
+.table tr:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.table thead tr:hover {
+    background-color: #FFFFFF;
+}

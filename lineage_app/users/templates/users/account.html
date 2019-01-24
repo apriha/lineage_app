@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Account{% endblock %}
+
+{% block content %}
+<div class="row justify-content-md-center">
+    <div class="col-md-8">
+        <h2>Account</h2>
+        <p>If you no longer wish to use <strong>lineage</strong>, you can delete your account and
+            disconnect from Open Humans.
+
+        <h5>Delete account</h5>
+        <p>Click the button below to delete your account and the following:
+
+        <ul>
+            <li>Data imported from your Open Humans account</li>
+            <li>Data uploaded by you to the Web App</li>
+            <li>Data generated through your use of the Web App</li>
+        </ul>
+
+        <p> Note that information the Web App automatically collects will be retained per the
+            <a href="{% url 'data-use-policy' %}">Data Use Policy.</a></p>
+        <p>
+        <form method="post" action="{% url 'users:delete' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-md">
+                <i class="fas fa-trash-alt"></i> Delete Account
+            </button>
+        </form>
+        </p>
+
+        <h5>Disconnect <strong>lineage</strong> from Open Humans</h5>
+        <p>To disconnect <strong>lineage</strong> from Open Humans, you can remove the
+            connection <a href="https://www.openhumans.org/activity/lineage/">here.</a></p>
+
+        <p>De-authorizing the project will also attempt to automatically delete your account and
+            data (same effect as clicking the <em>Delete Account</em> button).</p>
+
+        <p>Note that data uploaded by <strong>lineage</strong> to your Open Humans account will
+            still exist, unless you request that it be deleted.</p>
+
+    </div>
+
+</div>
+{% endblock content %}

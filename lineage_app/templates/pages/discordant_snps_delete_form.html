@@ -1,0 +1,6 @@
+<form method="post" action="{% url 'delete_discordant_snps' record.uuid %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline-danger btn-sm">
+        <i class="far fa-trash-alt"></i>
+    </button>
+</form>

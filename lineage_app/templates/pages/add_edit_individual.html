@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ title }} Individual{% endblock %}
+
+{% block content %}
+<div class="row justify-content-md-center">
+    <div class="col-md-8">
+        <h2>{{ title }} Individual</h2>
+        <form method="post" action="{{ action_url }}">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-secondary">
+                <i class="fas fa-save"></i> Save
+            </button>
+            <a href="{% url 'individuals' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Get started / Login{% endblock title %}
+
+{% block content %}
+<div class="row justify-content-md-center">
+  <div class="col-md-8">
+    <h2>How it Works</h2>
+    <ol>
+      <li>
+        Upload data to your <a href="https://www.openhumans.org">Open Humans</a> account for any / all of the following:
+        <ul>
+          <li><a href="https://www.openhumans.org/activity/23andme-upload/">23andMe</a></li>
+          <li><a href="https://www.openhumans.org/activity/familytreedna-integration/">Family Tree DNA</a></li>
+          <li><a href="https://www.openhumans.org/activity/ancestrydna-upload/">AncestryDNA</a></li>
+        </ul>
+      </li>
+      <li>
+        Authorize and login to <b>lineage</b> through Open Humans below
+        <ul>
+          <li>You will be redirected back to <b>lineage</b> and can use the service to analyze your data</li>
+        </ul>
+      </li>
+    </ol>
+    <a class="btn btn-secondary" href="{{ auth_url }}"><i class="fas fa-sign-in-alt"></i> Login</a>
+    <p class="text-muted"><small>By clicking Login, you agree to the
+      <a href="{% url 'terms-of-use' %}">Terms of Use</a> and
+      <a href="{% url 'data-use-policy' %}">Data Use Policy</a></small></p>
+  </div>
+</div>
+{% endblock content %}

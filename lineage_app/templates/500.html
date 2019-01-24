@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Internal Server Error (500){% endblock %}
+
+{% block content %}
+<div class="row justify-content-md-center">
+<h1>Internal Server Error (500)</h1>
+</div>
+<div class="row justify-content-md-center">
+<h3>Looks like something went wrong!</h3>
+</div>
+<div class="row justify-content-md-center">
+<p>We track these errors automatically, but if the problem persists, feel free to contact us.</p>
+</div>
+
+{% if sentry_event_id %}
+<script src="https://browser.sentry-cdn.com/4.4.2/bundle.min.js" crossorigin="anonymous"></script>
+<script>
+  Sentry.init({ dsn: '{{ sentry_dsn }}' });
+  Sentry.showReportDialog({ eventId: '{{ sentry_event_id }}' })
+</script>
+{% endif %}
+{% endblock content %}

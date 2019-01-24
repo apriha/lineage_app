@@ -1,0 +1,198 @@
+{% load humanize %}
+{% load render_table from django_tables2 %}
+
+<div class="card {% if individual.obj.openhumans_individual %}border-primary{% endif %} mb-3">
+    {# https://stackoverflow.com/a/49412500 #}
+    {# https://stackoverflow.com/a/49678971 #}
+    {# https://stackoverflow.com/a/14412777 #}
+    {# https://stackoverflow.com/a/11746899 #}
+
+    <div class="card-header">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h4 class="mb-0"><i class="far fa-user"></i>
+                    {{ individual.obj.name|truncatechars:50 }}
+                    {% if individual.obj.openhumans_individual %}
+                    <span class="badge badge-pill badge-primary ml-2">Open Humans Individual</span>
+                    {% endif %}</h4>
+            </div>
+            <div class="col-md-2 text-right">
+                <div id="status-{{ individual.obj.pk }}">
+                    {% if individual.obj.loading_snps %}
+                    <span class="badge badge-pill badge-secondary">
+                        <a href="{% url 'individuals' %}"><i class="fas fa-spinner fa-spin"></i>
+                            Loading SNPs...</a>
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="float-right">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button"
+                                id="dropdownMenuButton" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-wrench"></i> Actions
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <button type="button"
+                                    class="dropdown-item btn btn-outline-primary upload-snps-{{ individual.obj.uuid }}">
+                                Add SNPs
+                            </button>
+
+                            <form method="post">
+                                {% csrf_token %}
+                                <button type="submit"
+                                        class="dropdown-item {% if not individual.obj.snps_can_be_merged %}disabled{% endif %}">
+                                    Merge Raw Data
+                                    {% if individual.obj.merging_in_progress %}
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    {% endif %}
+                                </button>
+                            </form>
+
+                            <form method="post">
+                                {% csrf_token %}
+                                <button type="submit"
+                                        class="dropdown-item {% if not individual.obj.snps_can_be_remapped %}disabled{% endif %}">
+                                    Remap SNPs
+                                    {% if individual.obj.remapping_in_progress %}
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    {% endif %}
+                                </button>
+                            </form>
+
+                            <a class="dropdown-item"
+                               href="{% url 'edit_individual' individual.obj.uuid %}">Edit</a>
+
+                            <form method="post"
+                                  action="{% url 'delete_individual' individual.obj.uuid %}">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item">Delete</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input id="fileupload-{{ individual.obj.pk }}" type="file" name="file" multiple
+               style="display: none;"
+               data-url="{% url 'upload_snps' individual.obj.uuid %}"
+               data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+        <script>
+            $(function () {
+                $(".upload-snps-{{ individual.obj.uuid }}").click(function () {
+                    $("#fileupload-{{ individual.obj.uuid }}").click();
+                });
+
+                $("#fileupload-{{ individual.obj.uuid }}").fileupload({
+                    dataType: 'json',
+                    sequentialUploads: true,
+
+                    start: function (e) {
+                        $("#modal-progress").modal("show");
+                    },
+
+                    stop: function (e) {
+                        $("#modal-progress").modal("hide");
+                    },
+
+                    progressall: function (e, data) {
+                        var progress = parseInt(data.loaded / data.total * 100, 10);
+                        var strProgress = progress + "%";
+                        $(".progress-bar").css({"width": strProgress});
+                        $(".progress-bar").text(strProgress);
+                    },
+
+                    done: function (e, data) {
+                        if (data.result.is_valid) {
+                            $("#status-{{ individual.obj.uuid }}").html('<span class="badge badge-pill badge-secondary"><a href="{% url 'individuals' %}"><i class="fas fa-spinner fa-spin"></i> Loading SNPs...</a></span>');
+                        }
+                    }
+
+                });
+            });
+        </script>
+    </div>
+
+
+    <div class="card-body">
+        {% if individual.snps|length == 0 %}
+        <div class="row justify-content-md-center mb-2">
+            <button type="button"
+                    class="btn btn-outline-primary upload-snps-{{ individual.obj.uuid }}">
+                <i class="far fa-arrow-alt-circle-up"></i> Upload files
+            </button>
+        </div>
+        <div class="row justify-content-md-center">
+            <p class="text-secondary mb-0">23andMe, AncestryDNA, or Family Tree DNA</p>
+        </div>
+        {% else %}
+        <table class="table mb-0">
+            <thead>
+            <tr>
+                <th>Source</th>
+                <th>Assembly</th>
+                <th>Build</th>
+                <th>Build Detected</th>
+                <th>SNP Count</th>
+                <th>Chromosomes</th>
+                <th>Download</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for snps in individual.snps %}
+            {% if snps.setup_complete %}
+            <tr>
+                <td>
+                    {% if snps.generated_by_lineage %}
+                    lineage
+                    {% else %}
+                    {{ snps.source }}
+                    {% endif %}
+                </td>
+                <td>{{ snps.assembly }}</td>
+                <td>{{ snps.build }}</td>
+                <td class="text-center">{% if snps.build_detected %}
+                    <i class="fas fa-check" title="Yes"></i>
+                    {% else %}
+                    <i class="fas fa-times" title="No"></i>
+                    {% endif %}
+                </td>
+                <td>{{ snps.snp_count }}</td>
+                <td>{{ snps.chromosomes }}</td>
+                <td>
+                    <a href="{{ snps.get_url }}" class="btn btn-outline-primary btn-sm" download>
+                        <i class="far fa-arrow-alt-circle-down"></i> Download</a>
+                </td>
+                <td>
+                    <form method="post" action="{% url 'delete_snps' snps.uuid %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            <i class="far fa-trash-alt"></i> Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+        {% if individual.obj.get_discrepant_snps %}
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{{ individual.obj.discrepant_snps.get_url }}"
+                   class="btn btn-outline-primary btn-sm" download>
+                    <i class="far fa-arrow-alt-circle-down"></i> Discrepant SNPs
+                    <span class="badge badge-pill badge-warning">
+                        {{ individual.obj.discrepant_snps.snp_count }}
+                    </span></a>
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>

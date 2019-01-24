@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Acknowledgements{% endblock %}
+
+{% block content %}
+<div class="row justify-content-md-center">
+    <div class="col-md-8">
+        <h2>Acknowledgements</h2>
+        <p class="lead">Special thanks to the following:</p>
+    </div>
+</div>
+<div class="row justify-content-md-center">
+    <div class="col-md-2"></div>
+    <div class="col-md-4">
+        <ul>
+            <li><a href="https://www.openhumans.org">Open Humans</a></li>
+            <li><a href="https://www.python.org">Python</a></li>
+            <li><a href="https://www.djangoproject.com">Django</a></li>
+            <li><a href="https://www.postgresql.org">PostgreSQL</a></li>
+            <li><a href="https://redis.io">Redis</a></li>
+            <li><a href="https://www.nginx.com">NGINX</a></li>
+            <li><a href="https://gunicorn.org">Gunicorn</a></li>
+            <li><a href="http://www.celeryproject.org">Celery</a></li>
+            <li><a href="https://letsencrypt.org">Let's Encrypt</a></li>
+            <li><a href="https://www.jetbrains.com/pycharm/">PyCharm</a></li>
+            <li><a href="https://cs50.harvard.edu">CS50</a>'s
+                <a href="https://docs.cs50.net/2018/x/psets/7/pset7.html">Pset7</a></li>
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <ul>
+            <li><a href="https://getbootstrap.com">Bootstrap</a></li>
+            <li><a href="https://bootswatch.com/cerulean/">Bootswatch: Cerulean</a></li>
+            <li><a href="https://github.com/pydanny/cookiecutter-django">Cookiecutter Django</a>
+            </li>
+            <li><a href="https://realfavicongenerator.net">RealFaviconGenerator</a></li>
+            <li><a href="https://simpleisbetterthancomplex.com">Simple is Better Than Complex</a>
+            </li>
+            <li><a href="https://github.com/blueimp/jQuery-File-Upload">jQuery File Upload</a></li>
+            <li><a href="https://github.com/czue/celery-progress">celery-progress</a></li>
+            <li><a href="https://github.com/django-crispy-forms/django-crispy-forms">django-crispy-forms</a>
+            </li>
+            <li><a href="https://github.com/moggers87/django-sendfile2">django-sendfile2</a></li>
+            <li><a href="https://github.com/jieter/django-tables2">django-tables2</a></li>
+        </ul>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+<div class="row justify-content-md-center">
+    <div class="col-md-8">
+        <p>Finally, the logo was designed by <a href="https://www.imdb.com/name/nm2968347/">Jeff
+            Gill</a>, and the background on the <a href="{% url 'index' %}">homepage</a> is a
+            portion of the <a href="https://www.ncbi.nlm.nih.gov/gene/7503">XIST</a>
+            <a href="https://www.ncbi.nlm.nih.gov/nuccore/NR_001564.2">non-coding RNA sequence</a>.
+        </p>
+        <blockquote class="blockquote text-center">
+            <p class="mb-0">Each generation stands on the shoulders of those who have gone before
+                them...</p>
+            <footer class="blockquote-footer">Stephen Hawking</footer>
+        </blockquote>
+    </div>
+</div>
+{% endblock content %}
