@@ -375,7 +375,7 @@ class DiscrepantSnps(models.Model):
         s = ''
         if include_individual_name:
             s += clean_string(self.individual.name) + '_'
-        s += 'discrepant_snps.csv'
+        s += 'lineage_discrepant_snps.csv'
         return  s
 
     def get_url(self):

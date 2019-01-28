@@ -151,7 +151,7 @@ def upload_files(individual):
 
         discrepant_snps = individual.get_discrepant_snps()
         if discrepant_snps:
-            discrepant_snps_file = os.path.join(tmpdir, 'discrepant_snps.csv')
+            discrepant_snps_file = os.path.join(tmpdir, 'lineage_discrepant_snps.csv')
             shutil.copy(discrepant_snps.file.path, discrepant_snps_file)
 
             files_to_upload.append({'file': discrepant_snps_file, 'tags': ['snps'],
