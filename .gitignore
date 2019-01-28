@@ -306,4 +306,5 @@ protected/
 
 .pytest_cache/
 .env
+db.sqlite3
 .envs/*
