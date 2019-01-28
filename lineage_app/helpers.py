@@ -126,34 +126,34 @@ def upload_files(individual):
 
     with tempfile.TemporaryDirectory() as tmpdir:
         snps = individual.snps.filter(Q(generated_by_lineage=True) & Q(build=37))
+        if snps:
+            lineage_GRCh37 = os.path.join(tmpdir, 'lineage_GRCh37.csv')
+            shutil.copy(snps[0].file.path, lineage_GRCh37)
 
-        lineage_GRCh37 = os.path.join(tmpdir, 'lineage_GRCh37.csv')
-        shutil.copy(snps[0].file.path, lineage_GRCh37)
-
-        files_to_upload.append({'file': lineage_GRCh37, 'tags': ['snps', 'genotype', 'GRCh37',
-                                                                 'Build 37', 'lineage'],
-                            'description': 'SNPs merged (if applicable) and mapped relative to '
-                                           'the GRCh37 assembly'})
+            files_to_upload.append({'file': lineage_GRCh37, 'tags': ['snps', 'genotype', 'GRCh37',
+                                                                     'Build 37', 'lineage'],
+                                'description': 'SNPs merged (if applicable) and mapped relative to '
+                                               'the GRCh37 assembly'})
 
         snps = individual.snps.filter(Q(generated_by_lineage=True) & Q(build=36))
+        if snps:
+            lineage_NCBI36 = os.path.join(tmpdir, 'lineage_NCBI36.csv')
+            shutil.copy(snps[0].file.path, lineage_NCBI36)
 
-        lineage_NCBI36 = os.path.join(tmpdir, 'lineage_NCBI36.csv')
-        shutil.copy(snps[0].file.path, lineage_NCBI36)
-
-        files_to_upload.append({'file': lineage_NCBI36, 'tags': ['snps', 'genotype', 'NCBI36',
-                                                                 'Build 36', 'lineage'],
-                            'description': 'SNPs merged (if applicable) and mapped relative to '
-                                           'the NCBI36 assembly'})
+            files_to_upload.append({'file': lineage_NCBI36, 'tags': ['snps', 'genotype', 'NCBI36',
+                                                                     'Build 36', 'lineage'],
+                                'description': 'SNPs merged (if applicable) and mapped relative to '
+                                               'the NCBI36 assembly'})
 
         snps = individual.snps.filter(Q(generated_by_lineage=True) & Q(build=38))
+        if snps:
+            lineage_GRCh38 = os.path.join(tmpdir, 'lineage_GRCh38.csv')
+            shutil.copy(snps[0].file.path, lineage_GRCh38)
 
-        lineage_GRCh38 = os.path.join(tmpdir, 'lineage_GRCh38.csv')
-        shutil.copy(snps[0].file.path, lineage_GRCh38)
-
-        files_to_upload.append({'file': lineage_GRCh38, 'tags': ['snps', 'genotype', 'GRCh38',
-                                                                 'Build 38', 'lineage'],
-                            'description': 'SNPs merged (if applicable) and mapped relative to '
-                                           'the GRCh38 assembly'})
+            files_to_upload.append({'file': lineage_GRCh38, 'tags': ['snps', 'genotype', 'GRCh38',
+                                                                     'Build 38', 'lineage'],
+                                'description': 'SNPs merged (if applicable) and mapped relative to '
+                                               'the GRCh38 assembly'})
 
         discrepant_snps = individual.get_discrepant_snps()
         if discrepant_snps:

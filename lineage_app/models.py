@@ -169,7 +169,11 @@ class Individual(models.Model):
         #     return None
 
         snps = self.snps.all().order_by('-snp_count')
-        return snps[0]
+
+        if snps:
+            return snps[0]
+        else:
+            return None
 
 
     def merge_snps(self):
@@ -228,6 +232,9 @@ class Individual(models.Model):
         else:
             # TODO: merge SNPs here, but for now just get canonical SNPs; assume Build 37
             snps = self.get_canonical_snps()
+
+        if not snps:
+            return
 
         with tempfile.TemporaryDirectory() as tmpdir:
             l = Lineage(output_dir=tmpdir)
