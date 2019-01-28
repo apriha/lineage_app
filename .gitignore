@@ -308,3 +308,4 @@ protected/
 .env
 db.sqlite3
 .envs/*
+resources
