@@ -257,6 +257,7 @@ class Individual(models.Model):
     def add_snps(self, file, snps_info):
         snps = self.snps.create(user=self.user, **snps_info)
 
+        snps.file_ext = os.path.splitext(file)[1]
         # https://stackoverflow.com/a/10906037
         snps.file.name = snps.get_relative_path()
 
@@ -266,7 +267,6 @@ class Individual(models.Model):
         # move file to individual's media directory
         shutil.move(file, snps.file.path)
 
-        snps.file_ext = os.path.splitext(file)[1]
         snps.setup_complete = True
 
         snps.save()
@@ -309,7 +309,7 @@ class Snps(models.Model):
         super().delete(*args, **kwargs)
 
     def get_relative_path(self):
-        return get_relative_user_dir_file(self.user.uuid, self.uuid)
+        return get_relative_user_dir_file(self.user.uuid, self.uuid) + self.file_ext
 
     def _get_filename_source(self):
         if self.generated_by_lineage:
@@ -335,8 +335,6 @@ class Snps(models.Model):
             self.refresh_from_db()
             os.makedirs(get_absolute_user_dir(self.user.uuid), exist_ok=True)
             original_path = self.file.path
-            self.file.name = self.get_relative_path()
-            # TODO: add extension to filename
             if '.zip' in original_path:
                 self.file_ext = '.zip'
             elif '.csv.gz' in original_path:
@@ -347,6 +345,7 @@ class Snps(models.Model):
                 self.file_ext = '.csv'
             else:
                 self.file_ext = '.txt'
+            self.file.name = self.get_relative_path()
             shutil.move(original_path, self.file.path)
             self.setup_complete = True
             self.save()
@@ -369,7 +368,7 @@ class DiscrepantSnps(models.Model):
         super().delete(*args, **kwargs)
 
     def get_relative_path(self):
-        return get_relative_user_dir_file(self.user.uuid, self.uuid)
+        return get_relative_user_dir_file(self.user.uuid, self.uuid) + '.csv'
 
     def get_filename(self, include_individual_name=True):
         s = ''
