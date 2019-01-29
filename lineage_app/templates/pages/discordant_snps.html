@@ -34,11 +34,11 @@
 </div>
 
 
-<div class="row mt-4">
-    <div class="col-md-6">
+<div class="row justify-content-md-center mt-4">
+    <div class="col-md-5">
         {% if table %}<h3>Results</h3>{% endif %}
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
         {% if finding_discordant_snps %}
         <h4>
             <span class="badge badge-pill badge-secondary float-right">
@@ -50,8 +50,10 @@
     </div>
 </div>
 {% if table %}
-<div class="row">
-    {% render_table table %}
+<div class="row justify-content-md-center">
+    <div class="col-md-9">
+        {% render_table table %}
+    </div>
 </div>
 {% endif %}
 

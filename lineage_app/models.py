@@ -625,20 +625,21 @@ class DiscordantSnps(models.Model):
     uuid = models.UUIDField(unique=True, default=uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='discordant_snps')
     individual1 = models.ForeignKey(Individual, on_delete=models.CASCADE,
-                                    related_name='discordant_snps_ind1', verbose_name='1st '
-                                                                                       'Individual')
+                                    related_name='discordant_snps_ind1',
+                                    verbose_name='1st Individual (Child)')
     individual2 = models.ForeignKey(Individual, on_delete=models.CASCADE,
-                                    related_name='discordant_snps_ind2', verbose_name='2nd '
-                                                                                       'Individual')
+                                    related_name='discordant_snps_ind2',
+                                    verbose_name='2nd Individual (Parent)')
     # https://stackoverflow.com/a/6620137
     individual3 = models.ForeignKey(Individual, on_delete=models.CASCADE,
-                                    related_name='discordant_snps_ind3', verbose_name='3rd '
-                                                                                       'Individual', blank=True, null=True)
+                                    related_name='discordant_snps_ind3',
+                                    verbose_name='3rd Individual (Parent)', blank=True, null=True)
 
     discordant_snps_csv = models.FileField(storage=sendfile_storage, editable=False)
     discordant_snps_pickle = models.FileField(storage=sendfile_storage, editable=False)
 
-    total_discordant_snps = models.PositiveIntegerField(default=0, editable=False)
+    total_discordant_snps = models.PositiveIntegerField(default=0, editable=False,
+                                                        verbose_name='Discordant SNPs')
 
     setup_complete = models.BooleanField(default=False, editable=False)
     setup_task_id = models.UUIDField(unique=True, default=uuid4, editable=False)
