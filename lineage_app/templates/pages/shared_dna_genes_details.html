@@ -5,16 +5,101 @@
 {% block title %}Shared DNA and Genes - Details{% endblock %}
 
 {% block content %}
-<h2>{{ shared_dna_genes.individual1.name }} / {{ shared_dna_genes.individual2.name }} Shared
-    DNA and Genes (GRCh37)</h2>
-<p>
-    <span class="badge badge-pill badge-secondary">
-        cM Threshold = {{ shared_dna_genes.cM_threshold }}
-    </span>
-    <span class="badge badge-pill badge-secondary">
-        SNP Threshold = {{ shared_dna_genes.snp_threshold }}
-    </span>
-</p>
+<div class="row">
+    <div class="col-md-10">
+        <h2>{{ shared_dna_genes.individual1.name }} / {{ shared_dna_genes.individual2.name }}
+            Shared DNA and Genes (GRCh37)</h2>
+        <span class="badge badge-pill badge-secondary">
+            cM Threshold = {{ shared_dna_genes.cM_threshold }}
+        </span>
+        <span class="badge badge-pill badge-secondary">
+            SNP Threshold = {{ shared_dna_genes.snp_threshold }}
+        </span>
+    </div>
+    <div class="col-md-2">
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-secondary float-right" data-toggle="modal"
+                data-target="#helpModal">
+            <i class="far fa-question-circle"></i> Help
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="helpModal" tabindex="-1" role="dialog"
+             aria-labelledby="helpModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="helpModalLabel">Help</h5>
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h6>Overview</h6>
+                        <p>
+                            This page is divided into two sections:
+                            <span class="text-success">Shared DNA</span> and
+                            <span class="text-success">Shared Genes</span>.
+                        </p>
+                        <p>
+                            <span class="text-success">Shared DNA</span> presents the shared DNA
+                            (as calculated by <strong>lineage</strong>) between the two individuals
+                            with the specified cM and SNP Thresholds. DNA can be shared on either
+                            one chromosome or both chromosomes in a pair (humans have 23 pairs of
+                            homologous chromosomes). For example, when siblings share a segment
+                            of DNA on both chromosomes, they inherited the same DNA from their
+                            mother and father for that segment.
+                        </p>
+                        <p>
+                            The shared DNA is presented both in a graphical format (with regions
+                            highlighted for the DNA shared / not shared) and in a tabular format.
+                            The columns in the tables can be sorted, and the data can be downloaded
+                            with the Download buttons.
+                        </p>
+                        <p>
+                            <span class="text-success">Shared Genes</span> presents the shared
+                            genes (as calculated by <strong>lineage</strong>) between the two
+                            individuals with the specified cM and SNP Thresholds. In other
+                            words, these are the genes that are being transcribed from the shared
+                            DNA segments, and as such, should be producing the <i>same</i>
+                            proteins.
+                        </p>
+                        <p>
+                            The number of shared genes is presented, and the data can be
+                            downloaded with the Download buttons.
+                        </p>
+                        <h6>Wait, I thought there were only about 23,000 genes? Why are more
+                            matching?</h6>
+                        <p>
+                            Many genes have variants called transcripts. Shared Genes includes the
+                            known transcripts for Build 37 / GRCh37.
+                        </p>
+                        <h6>Why don't two males match on the Y chromosome?</h6>
+                        <p>
+                            The Y chromosome doesn't recombine (apart from the pseudoautosomal
+                            region); therefore, genetic maps don't have recombination rates for the
+                            Y chromosome.
+                        </p>
+                        <h6>Why are only a fraction of the total SNPs matching?</h6>
+                        <p>
+                            DTC DNA testing companies test different SNPs for different
+                            purposes, and the SNPs that they test can change over time. For
+                            <strong>lineage</strong> to be able to find shared DNA using SNPs, both
+                            individuals need to have that SNP tested.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <hr>
 <div class="row">
     <div class="col-md-12">

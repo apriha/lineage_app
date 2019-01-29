@@ -26,6 +26,90 @@
             <button type="submit" class="btn btn-primary float-right">
                 <i class="fas fa-dna"></i> Find Shared DNA and Genes
             </button>
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-secondary float-right mr-3" data-toggle="modal"
+                    data-target="#helpModal">
+                <i class="far fa-question-circle"></i> Help
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="helpModal" tabindex="-1" role="dialog"
+                 aria-labelledby="helpModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="helpModalLabel">Help</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h6>Overview</h6>
+                            <p>
+                                Individuals can share DNA inherited from a common ancestor, and
+                                any genes located in the shared DNA segments should be producing
+                                the <i>same</i> proteins.
+                            </p>
+                            <p>
+                                This tool helps to find shared DNA and genes between two
+                                individuals.
+                            </p>
+                            <h6>Does it matter who is selected as the 1st or 2nd Individual?</h6>
+                            <p>
+                                No. The results will be the same.
+                            </p>
+                            <h6>What is the cM Threshold?</h6>
+                            <p>
+                                The centiMorgan is a measure of the recombination rate across
+                                the human genome - regions of chromosomes that undergo frequent
+                                recombination have higher recombination rates. In other words,
+                                individuals who are related will share DNA that has not undergone
+                                recombination, so when two people share DNA in a region that has a
+                                high probability of recombination, they are more likely to
+                                have inherited that DNA from a common ancestor.
+                            </p>
+                            <p>
+                                For <strong>lineage</strong>, shared DNA segments are identified
+                                when the cM Threshold is reached, as long as there are also at
+                                least the minimum required number of SNPs in that segment...
+                            </p>
+                            <h6>What is the SNP Threshold?</h6>
+                            <p>
+                                Since the recombination rate can vary dramatically across the
+                                genome, we need to be sure if a segment of DNA is actually a match,
+                                vs. just a few matching SNPs in a region with a high
+                                recombination rate. So, for <strong>lineage</strong>, the cM
+                                Threshold <i>and</i> SNP Threshold are used together to
+                                determine shared DNA segments.
+                            </p>
+                            <h6>What are good cM and SNP Thresholds?</h6>
+                            <p>
+                                The higher the cM and SNP Thresholds, the more stringent you are
+                                being on what constitutes a matching DNA segment. Try starting
+                                with the defaults and then increasing the thresholds to see
+                                how they affect the results.
+                            </p>
+                            <p>
+                                <strong>lineage</strong> uses the recombination rates specified
+                                in the <a
+                                    href="https://www.genome.gov/10001688/international-hapmap-project/">HapMap</a>
+                                Phase II genetic map. In this map, chromosome 1 (the largest
+                                chromosome) has approximately 286.28 cMs. Compare this to
+                                chromosome 22 (the smallest autosomal chromosome), which has
+                                approximately 74.11 cMs. So a cM Threshold of 75.00 would never
+                                match any DNA on chromosome 22...
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 </div>
