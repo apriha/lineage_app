@@ -537,6 +537,10 @@ class SharedDnaGenes(models.Model):
         ind1_snps = self.individual1.get_canonical_snps()
         ind2_snps = self.individual2.get_canonical_snps()
 
+        if not ind1_snps or not ind2_snps:
+            self.delete()
+            return
+
         with tempfile.TemporaryDirectory() as tmpdir:
             l = Lineage(output_dir=tmpdir)
 
@@ -689,8 +693,16 @@ class DiscordantSnps(models.Model):
         ind1_snps = self.individual1.get_canonical_snps()
         ind2_snps = self.individual2.get_canonical_snps()
 
+        if not ind1_snps or not ind2_snps:
+            self.delete()
+            return
+
         if self.individual3:
             ind3_snps = self.individual3.get_canonical_snps()
+
+            if not ind3_snps:
+                self.delete()
+                return
 
         with tempfile.TemporaryDirectory() as tmpdir:
             l = Lineage(output_dir=tmpdir)
