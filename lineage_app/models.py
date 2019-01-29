@@ -346,6 +346,8 @@ class Snps(models.Model):
                 self.file_ext = '.zip'
             elif '.csv.gz' in original_path:
                 self.file_ext = '.csv.gz'
+            elif '.txt.gz' in original_path:
+                self.file_ext = '.txt.gz'
             elif '.gz' in original_path:
                 self.file_ext = '.gz'
             elif '.csv' in original_path:
