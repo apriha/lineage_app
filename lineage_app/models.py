@@ -316,7 +316,7 @@ class Snps(models.Model):
         super().delete(*args, **kwargs)
 
     def get_relative_path(self):
-        return get_relative_user_dir_file(self.user.uuid, self.uuid) + self.file_ext
+        return get_relative_user_dir_file(self.user.uuid, self.uuid)
 
     def _get_filename_source(self):
         if self.generated_by_lineage:
@@ -375,7 +375,7 @@ class DiscrepantSnps(models.Model):
         super().delete(*args, **kwargs)
 
     def get_relative_path(self):
-        return get_relative_user_dir_file(self.user.uuid, self.uuid) + '.csv'
+        return get_relative_user_dir_file(self.user.uuid, self.uuid)
 
     def get_filename(self, include_individual_name=True):
         s = ''
@@ -573,7 +573,7 @@ class SharedDnaGenes(models.Model):
 
                     elif 'shared_dna_one_chrom' in file:
                         self.shared_dna_one_chrom_csv = \
-                            get_relative_user_dir_file(self.user.uuid, uuid4(), '.csv.gz')
+                            get_relative_user_dir_file(self.user.uuid, uuid4())
                         compress_file(file_path, self.shared_dna_one_chrom_csv.path)
 
                         self.shared_dna_one_chrom_pickle = \
@@ -583,7 +583,7 @@ class SharedDnaGenes(models.Model):
 
                     elif 'shared_genes_one_chrom' in file:
                         self.shared_genes_one_chrom_csv = \
-                            get_relative_user_dir_file(self.user.uuid, uuid4(), '.csv.gz')
+                            get_relative_user_dir_file(self.user.uuid, uuid4())
                         compress_file(file_path, self.shared_genes_one_chrom_csv.path)
 
                         self.shared_genes_one_chrom_pickle = \
@@ -593,7 +593,7 @@ class SharedDnaGenes(models.Model):
 
                     elif 'shared_dna_two_chrom' in file:
                         self.shared_dna_two_chrom_csv = \
-                            get_relative_user_dir_file(self.user.uuid, uuid4(), '.csv.gz')
+                            get_relative_user_dir_file(self.user.uuid, uuid4())
                         compress_file(file_path, self.shared_dna_two_chrom_csv.path)
 
                         self.shared_dna_two_chrom_pickle = \
@@ -603,7 +603,7 @@ class SharedDnaGenes(models.Model):
 
                     elif 'shared_genes_two_chrom' in file:
                         self.shared_genes_two_chrom_csv = \
-                            get_relative_user_dir_file(self.user.uuid, uuid4(), '.csv.gz')
+                            get_relative_user_dir_file(self.user.uuid, uuid4())
                         compress_file(file_path, self.shared_genes_two_chrom_csv.path)
 
                         self.shared_genes_two_chrom_pickle = \
@@ -722,7 +722,7 @@ class DiscordantSnps(models.Model):
                     file_path = os.path.join(root, file)
                     if 'discordant_snps' in file:
                         self.discordant_snps_csv.name = \
-                            get_relative_user_dir_file(self.user.uuid, uuid4(), '.csv.gz')
+                            get_relative_user_dir_file(self.user.uuid, uuid4())
                         compress_file(file_path, self.discordant_snps_csv.path)
 
                         self.discordant_snps_pickle = \
