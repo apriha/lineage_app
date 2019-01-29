@@ -495,7 +495,7 @@ class SharedDnaGenes(models.Model):
 
     def _get_threshold_str(self):
         return 'cMs' + clean_string(str(self.cM_threshold)) + '_SNPs' + \
-               clean_string(str(self.snp_threshold)) + '_'
+               clean_string(str(self.snp_threshold))
 
     def get_shared_dna_one_chrom_csv_filename(self, include_individual_names=True):
         s = ''
