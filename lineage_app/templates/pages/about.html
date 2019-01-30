@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}About{% endblock %}
 
@@ -27,11 +28,24 @@
             </li>
         </ul>
 
-        <p><a href="{% url 'index' %}">lineage.app</a> is proudly
+        <p class="mb-0"><a href="{% url 'index' %}">lineage.app</a> is proudly
             <a href="https://github.com/scedasticsoftware/lineage_app">open source</a>
             and was developed thanks to a generous
-            <a href="https://www.openhumans.org/grants/">Project Grant</a>
+            <a href="https://www.openhumans.org/grants/">project grant</a>
             from <a href="https://www.openhumans.org/">Open Humans</a>.</p>
+    </div>
+</div>
+<div class="row justify-content-md-center">
+    <div class="col-md-8">
+        <hr>
+        <img src="{% static 'images/apriha.jpg' %}" class="float-left mr-3">
+        <p><a href="{% url 'index' %}">lineage.app</a> was developed by Andrew Riha and is
+            administered by Scedastic Software, LLC, a company Andrew founded in 2019. Andrew
+            has a B.S. and M.S. in Computer Engineering from
+            <a href="https://www.iastate.edu">Iowa State University</a> and a Graduate
+            Certificate in Bioinformatics from
+            <a href="https://www.extension.harvard.edu">Harvard Extension School</a>. Andrew enjoys
+            running, traveling, and backpacking.</p>
     </div>
 </div>
 {% endblock content %}
