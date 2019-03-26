@@ -1,5 +1,6 @@
 whitenoise==4.1.2  # https://github.com/evansd/whitenoise
 redis==2.10.6  # https://github.com/antirez/redis
+kombu==4.2.2.post1  # https://github.com/celery/kombu
 celery==4.2.1  # https://github.com/celery/celery
 lineage==1.0.3  # https://github.com/apriha/lineage
 open-humans-api==0.2.5  # https://github.com/OpenHumans/open-humans-api
@@ -8,10 +9,10 @@ requests==2.21.0  # https://github.com/requests/requests
 
 # Django
 # ------------------------------------------------------------------------------
-django==2.1.5  # https://www.djangoproject.com/
+django==2.1.7  # https://www.djangoproject.com/
 django-environ==0.4.5  # https://github.com/joke2k/django-environ
 django-crispy-forms==1.7.2  # https://github.com/django-crispy-forms/django-crispy-forms
 django-redis==4.10.0  # https://github.com/niwinz/django-redis
-django-tables2==2.0.4  # https://github.com/jieter/django-tables2
+django-tables2==2.0.5  # https://github.com/jieter/django-tables2
 celery-progress==0.0.3  # https://github.com/czue/celery-progress
 django-sendfile2==0.4.2  # https://github.com/moggers87/django-sendfile2
