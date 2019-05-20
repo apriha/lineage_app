@@ -1,0 +1,29 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+django-debug-toolbar = "*"
+
+[packages]
+arrow = "*"
+celery = "*"
+celery-progress = "*"
+django = "*"
+django-crispy-forms = "*"
+django-environ = "*"
+django-redis = "*"
+django-sendfile2 = "*"
+django-tables2 = "*"
+gunicorn = "*"
+lineage = "*"
+open-humans-api = "*"
+psycopg2 = "*"
+redis = "*"
+requests = "*"
+sentry-sdk = "*"
+whitenoise = "*"
+
+[requires]
+python_version = "3.5"
