@@ -646,6 +646,7 @@ class SharedDnaGenes(models.Model):
                             self.user.uuid, uuid4(), ".png"
                         )
                         shutil.move(file_path, self.shared_dna_plot_png.path)
+                        os.chmod(self.shared_dna_plot_png.path, 0o640)
 
                     elif "shared_dna_one_chrom" in file:
                         self.shared_dna_one_chrom_csv = get_relative_user_dir_file(
