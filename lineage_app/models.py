@@ -190,7 +190,7 @@ class Individual(models.Model):
             self.discrepant_snps.delete()
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            l = Lineage(output_dir=tmpdir)
+            l = Lineage(output_dir=tmpdir, parallelize=False)
 
             ind = l.create_individual('ind')
             for snps in self.snps.all():
@@ -237,7 +237,7 @@ class Individual(models.Model):
             return
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            l = Lineage(output_dir=tmpdir)
+            l = Lineage(output_dir=tmpdir, parallelize=False)
 
             ind = l.create_individual('lineage_NCBI36', snps.file.path)
             ind.remap_snps(36)
@@ -542,7 +542,7 @@ class SharedDnaGenes(models.Model):
             return
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            l = Lineage(output_dir=tmpdir)
+            l = Lineage(output_dir=tmpdir, parallelize=False)
 
             ind1_snps_file = shutil.copy(ind1_snps.file.path, os.path.join(tmpdir, 'ind1_snps' +
                                                                   ind1_snps.file_ext))
@@ -706,7 +706,7 @@ class DiscordantSnps(models.Model):
                 return
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            l = Lineage(output_dir=tmpdir)
+            l = Lineage(output_dir=tmpdir, parallelize=False)
 
             ind1_snps_file = shutil.copy(ind1_snps.file.path, os.path.join(tmpdir, 'ind1_snps' +
                                                                               ind1_snps.file_ext))
