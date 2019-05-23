@@ -20,7 +20,7 @@ def setup_user(self, user_id):
     user = User.objects.get(id=user_id)
 
     # create individual for this user
-    individual = user.individuals.create(name='Me', openhumans_individual=True)
+    individual = user.individuals.create(name="Me", openhumans_individual=True)
     try:
         setup_oh_individual(individual.pk, progress_recorder)
     except Exception as err:
@@ -28,11 +28,12 @@ def setup_user(self, user_id):
         user.setup_complete = True
         user.save()
 
+
 @shared_task
 def delete_user(user_id):
     user = User.objects.get(id=user_id)
 
-    user_dir = os.path.join(settings.SENDFILE_ROOT, 'users', str(user.uuid))
+    user_dir = os.path.join(settings.SENDFILE_ROOT, "users", str(user.uuid))
     if os.path.exists(user_dir):
         shutil.rmtree(user_dir)
 

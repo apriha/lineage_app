@@ -12,127 +12,449 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-    ]
+    dependencies = [migrations.swappable_dependency(settings.AUTH_USER_MODEL)]
 
     operations = [
         migrations.CreateModel(
-            name='DiscordantSnps',
+            name="DiscordantSnps",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
-                ('discordant_snps_csv', models.FileField(editable=False, storage=lineage_app.storage.SendFileFileSystemStorage(), upload_to='')),
-                ('discordant_snps_pickle', models.FileField(editable=False, storage=lineage_app.storage.SendFileFileSystemStorage(), upload_to='')),
-                ('total_discordant_snps', models.PositiveIntegerField(default=0, editable=False)),
-                ('setup_complete', models.BooleanField(default=False, editable=False)),
-                ('setup_task_id', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "uuid",
+                    models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
+                ),
+                (
+                    "discordant_snps_csv",
+                    models.FileField(
+                        editable=False,
+                        storage=lineage_app.storage.SendFileFileSystemStorage(),
+                        upload_to="",
+                    ),
+                ),
+                (
+                    "discordant_snps_pickle",
+                    models.FileField(
+                        editable=False,
+                        storage=lineage_app.storage.SendFileFileSystemStorage(),
+                        upload_to="",
+                    ),
+                ),
+                (
+                    "total_discordant_snps",
+                    models.PositiveIntegerField(default=0, editable=False),
+                ),
+                ("setup_complete", models.BooleanField(default=False, editable=False)),
+                (
+                    "setup_task_id",
+                    models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='DiscrepantSnps',
+            name="DiscrepantSnps",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
-                ('file', models.FileField(editable=False, storage=lineage_app.storage.SendFileFileSystemStorage(), upload_to='')),
-                ('snp_count', models.IntegerField(default=0, editable=False, verbose_name='Discrepant SNPs')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "uuid",
+                    models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
+                ),
+                (
+                    "file",
+                    models.FileField(
+                        editable=False,
+                        storage=lineage_app.storage.SendFileFileSystemStorage(),
+                        upload_to="",
+                    ),
+                ),
+                (
+                    "snp_count",
+                    models.IntegerField(
+                        default=0, editable=False, verbose_name="Discrepant SNPs"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Individual',
+            name="Individual",
             fields=[
-                ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=256)),
-                ('openhumans_individual', models.BooleanField(default=False, editable=False)),
-                ('locked', models.BooleanField(default=False, editable=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='individuals', to=settings.AUTH_USER_MODEL)),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("name", models.CharField(max_length=256)),
+                (
+                    "openhumans_individual",
+                    models.BooleanField(default=False, editable=False),
+                ),
+                ("locked", models.BooleanField(default=False, editable=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="individuals",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='SharedDnaGenes',
+            name="SharedDnaGenes",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
-                ('cM_threshold', models.DecimalField(decimal_places=2, default=0.75, max_digits=5, validators=[django.core.validators.MinValueValidator(0)], verbose_name=' cM Threshold')),
-                ('snp_threshold', models.PositiveIntegerField(default=1000, verbose_name='SNP Threshold')),
-                ('shared_dna_plot_png', models.FileField(editable=False, storage=lineage_app.storage.SendFileFileSystemStorage(), upload_to='')),
-                ('shared_dna_one_chrom_csv', models.FileField(editable=False, storage=lineage_app.storage.SendFileFileSystemStorage(), upload_to='')),
-                ('shared_dna_one_chrom_pickle', models.FileField(editable=False, storage=lineage_app.storage.SendFileFileSystemStorage(), upload_to='')),
-                ('shared_dna_two_chrom_csv', models.FileField(editable=False, storage=lineage_app.storage.SendFileFileSystemStorage(), upload_to='')),
-                ('shared_dna_two_chrom_pickle', models.FileField(editable=False, storage=lineage_app.storage.SendFileFileSystemStorage(), upload_to='')),
-                ('shared_genes_one_chrom_csv', models.FileField(editable=False, storage=lineage_app.storage.SendFileFileSystemStorage(), upload_to='')),
-                ('shared_genes_one_chrom_pickle', models.FileField(editable=False, storage=lineage_app.storage.SendFileFileSystemStorage(), upload_to='')),
-                ('shared_genes_two_chrom_csv', models.FileField(editable=False, storage=lineage_app.storage.SendFileFileSystemStorage(), upload_to='')),
-                ('shared_genes_two_chrom_pickle', models.FileField(editable=False, storage=lineage_app.storage.SendFileFileSystemStorage(), upload_to='')),
-                ('total_shared_segments_one_chrom', models.PositiveIntegerField(default=0, editable=False)),
-                ('total_shared_segments_two_chrom', models.PositiveIntegerField(default=0, editable=False)),
-                ('total_shared_cMs_one_chrom', models.DecimalField(decimal_places=2, default=0, editable=False, max_digits=6, verbose_name=' cMs Shared DNA (1 chrom)')),
-                ('total_shared_cMs_two_chrom', models.DecimalField(decimal_places=2, default=0, editable=False, max_digits=6, verbose_name=' cMs Shared DNA (2 chrom)')),
-                ('total_snps_one_chrom', models.PositiveIntegerField(default=0, editable=False)),
-                ('total_snps_two_chrom', models.PositiveIntegerField(default=0, editable=False)),
-                ('total_chrom_one_chrom', models.PositiveIntegerField(default=0, editable=False)),
-                ('total_chrom_two_chrom', models.PositiveIntegerField(default=0, editable=False)),
-                ('total_shared_genes_one_chrom', models.PositiveIntegerField(default=0, editable=False, verbose_name='Shared Genes (1 chrom)')),
-                ('total_shared_genes_two_chrom', models.PositiveIntegerField(default=0, editable=False, verbose_name='Shared Genes (2 chrom)')),
-                ('setup_complete', models.BooleanField(default=False, editable=False)),
-                ('setup_task_id', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
-                ('individual1', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='shared_dna_genes_ind1', to='lineage_app.Individual', verbose_name='1st Individual')),
-                ('individual2', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='shared_dna_genes_ind2', to='lineage_app.Individual', verbose_name='2nd Individual')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='shared_dna_genes', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "uuid",
+                    models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
+                ),
+                (
+                    "cM_threshold",
+                    models.DecimalField(
+                        decimal_places=2,
+                        default=0.75,
+                        max_digits=5,
+                        validators=[django.core.validators.MinValueValidator(0)],
+                        verbose_name=" cM Threshold",
+                    ),
+                ),
+                (
+                    "snp_threshold",
+                    models.PositiveIntegerField(
+                        default=1000, verbose_name="SNP Threshold"
+                    ),
+                ),
+                (
+                    "shared_dna_plot_png",
+                    models.FileField(
+                        editable=False,
+                        storage=lineage_app.storage.SendFileFileSystemStorage(),
+                        upload_to="",
+                    ),
+                ),
+                (
+                    "shared_dna_one_chrom_csv",
+                    models.FileField(
+                        editable=False,
+                        storage=lineage_app.storage.SendFileFileSystemStorage(),
+                        upload_to="",
+                    ),
+                ),
+                (
+                    "shared_dna_one_chrom_pickle",
+                    models.FileField(
+                        editable=False,
+                        storage=lineage_app.storage.SendFileFileSystemStorage(),
+                        upload_to="",
+                    ),
+                ),
+                (
+                    "shared_dna_two_chrom_csv",
+                    models.FileField(
+                        editable=False,
+                        storage=lineage_app.storage.SendFileFileSystemStorage(),
+                        upload_to="",
+                    ),
+                ),
+                (
+                    "shared_dna_two_chrom_pickle",
+                    models.FileField(
+                        editable=False,
+                        storage=lineage_app.storage.SendFileFileSystemStorage(),
+                        upload_to="",
+                    ),
+                ),
+                (
+                    "shared_genes_one_chrom_csv",
+                    models.FileField(
+                        editable=False,
+                        storage=lineage_app.storage.SendFileFileSystemStorage(),
+                        upload_to="",
+                    ),
+                ),
+                (
+                    "shared_genes_one_chrom_pickle",
+                    models.FileField(
+                        editable=False,
+                        storage=lineage_app.storage.SendFileFileSystemStorage(),
+                        upload_to="",
+                    ),
+                ),
+                (
+                    "shared_genes_two_chrom_csv",
+                    models.FileField(
+                        editable=False,
+                        storage=lineage_app.storage.SendFileFileSystemStorage(),
+                        upload_to="",
+                    ),
+                ),
+                (
+                    "shared_genes_two_chrom_pickle",
+                    models.FileField(
+                        editable=False,
+                        storage=lineage_app.storage.SendFileFileSystemStorage(),
+                        upload_to="",
+                    ),
+                ),
+                (
+                    "total_shared_segments_one_chrom",
+                    models.PositiveIntegerField(default=0, editable=False),
+                ),
+                (
+                    "total_shared_segments_two_chrom",
+                    models.PositiveIntegerField(default=0, editable=False),
+                ),
+                (
+                    "total_shared_cMs_one_chrom",
+                    models.DecimalField(
+                        decimal_places=2,
+                        default=0,
+                        editable=False,
+                        max_digits=6,
+                        verbose_name=" cMs Shared DNA (1 chrom)",
+                    ),
+                ),
+                (
+                    "total_shared_cMs_two_chrom",
+                    models.DecimalField(
+                        decimal_places=2,
+                        default=0,
+                        editable=False,
+                        max_digits=6,
+                        verbose_name=" cMs Shared DNA (2 chrom)",
+                    ),
+                ),
+                (
+                    "total_snps_one_chrom",
+                    models.PositiveIntegerField(default=0, editable=False),
+                ),
+                (
+                    "total_snps_two_chrom",
+                    models.PositiveIntegerField(default=0, editable=False),
+                ),
+                (
+                    "total_chrom_one_chrom",
+                    models.PositiveIntegerField(default=0, editable=False),
+                ),
+                (
+                    "total_chrom_two_chrom",
+                    models.PositiveIntegerField(default=0, editable=False),
+                ),
+                (
+                    "total_shared_genes_one_chrom",
+                    models.PositiveIntegerField(
+                        default=0, editable=False, verbose_name="Shared Genes (1 chrom)"
+                    ),
+                ),
+                (
+                    "total_shared_genes_two_chrom",
+                    models.PositiveIntegerField(
+                        default=0, editable=False, verbose_name="Shared Genes (2 chrom)"
+                    ),
+                ),
+                ("setup_complete", models.BooleanField(default=False, editable=False)),
+                (
+                    "setup_task_id",
+                    models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
+                ),
+                (
+                    "individual1",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="shared_dna_genes_ind1",
+                        to="lineage_app.Individual",
+                        verbose_name="1st Individual",
+                    ),
+                ),
+                (
+                    "individual2",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="shared_dna_genes_ind2",
+                        to="lineage_app.Individual",
+                        verbose_name="2nd Individual",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="shared_dna_genes",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Snps',
+            name="Snps",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
-                ('file', models.FileField(storage=lineage_app.storage.SendFileFileSystemStorage(), upload_to='uploads/')),
-                ('file_ext', models.CharField(editable=False, max_length=16)),
-                ('source', models.CharField(editable=False, max_length=256)),
-                ('assembly', models.CharField(default='GRCh37', editable=False, max_length=8)),
-                ('build', models.IntegerField(default=37, editable=False)),
-                ('build_detected', models.BooleanField(default=False, editable=False, verbose_name='Build Detected')),
-                ('snp_count', models.IntegerField(default=0, editable=False, verbose_name='SNP Count')),
-                ('chromosomes', models.CharField(editable=False, max_length=256)),
-                ('merged', models.BooleanField(default=False, editable=False, verbose_name='Merged')),
-                ('generated_by_lineage', models.BooleanField(default=False, editable=False)),
-                ('sex', models.CharField(default='', editable=False, max_length=16, verbose_name='Determined Sex')),
-                ('uploaded_at', models.DateTimeField(auto_now_add=True)),
-                ('setup_task_id', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
-                ('setup_complete', models.BooleanField(default=False, editable=False)),
-                ('individual', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='snps', to='lineage_app.Individual')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='snps', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "uuid",
+                    models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
+                ),
+                (
+                    "file",
+                    models.FileField(
+                        storage=lineage_app.storage.SendFileFileSystemStorage(),
+                        upload_to="uploads/",
+                    ),
+                ),
+                ("file_ext", models.CharField(editable=False, max_length=16)),
+                ("source", models.CharField(editable=False, max_length=256)),
+                (
+                    "assembly",
+                    models.CharField(default="GRCh37", editable=False, max_length=8),
+                ),
+                ("build", models.IntegerField(default=37, editable=False)),
+                (
+                    "build_detected",
+                    models.BooleanField(
+                        default=False, editable=False, verbose_name="Build Detected"
+                    ),
+                ),
+                (
+                    "snp_count",
+                    models.IntegerField(
+                        default=0, editable=False, verbose_name="SNP Count"
+                    ),
+                ),
+                ("chromosomes", models.CharField(editable=False, max_length=256)),
+                (
+                    "merged",
+                    models.BooleanField(
+                        default=False, editable=False, verbose_name="Merged"
+                    ),
+                ),
+                (
+                    "generated_by_lineage",
+                    models.BooleanField(default=False, editable=False),
+                ),
+                (
+                    "sex",
+                    models.CharField(
+                        default="",
+                        editable=False,
+                        max_length=16,
+                        verbose_name="Determined Sex",
+                    ),
+                ),
+                ("uploaded_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "setup_task_id",
+                    models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
+                ),
+                ("setup_complete", models.BooleanField(default=False, editable=False)),
+                (
+                    "individual",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="snps",
+                        to="lineage_app.Individual",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="snps",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='discrepantsnps',
-            name='individual',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='discrepant_snps', to='lineage_app.Individual'),
+            model_name="discrepantsnps",
+            name="individual",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="discrepant_snps",
+                to="lineage_app.Individual",
+            ),
         ),
         migrations.AddField(
-            model_name='discrepantsnps',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='discrepant_snps', to=settings.AUTH_USER_MODEL),
+            model_name="discrepantsnps",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="discrepant_snps",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='discordantsnps',
-            name='individual1',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='discordant_snps_ind1', to='lineage_app.Individual', verbose_name='1st Individual'),
+            model_name="discordantsnps",
+            name="individual1",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="discordant_snps_ind1",
+                to="lineage_app.Individual",
+                verbose_name="1st Individual",
+            ),
         ),
         migrations.AddField(
-            model_name='discordantsnps',
-            name='individual2',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='discordant_snps_ind2', to='lineage_app.Individual', verbose_name='2nd Individual'),
+            model_name="discordantsnps",
+            name="individual2",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="discordant_snps_ind2",
+                to="lineage_app.Individual",
+                verbose_name="2nd Individual",
+            ),
         ),
         migrations.AddField(
-            model_name='discordantsnps',
-            name='individual3',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='discordant_snps_ind3', to='lineage_app.Individual', verbose_name='3rd Individual'),
+            model_name="discordantsnps",
+            name="individual3",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="discordant_snps_ind3",
+                to="lineage_app.Individual",
+                verbose_name="3rd Individual",
+            ),
         ),
         migrations.AddField(
-            model_name='discordantsnps',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='discordant_snps', to=settings.AUTH_USER_MODEL),
+            model_name="discordantsnps",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="discordant_snps",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

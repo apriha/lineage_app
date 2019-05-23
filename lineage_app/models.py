@@ -43,16 +43,16 @@ def parse_snps(file):
 
 def get_relative_user_dir(user_uuid):
     """ Get path relative to `SENDFILE_ROOT`. """
-    return settings.USERS_DIR + '/{}'.format(str(user_uuid))
+    return settings.USERS_DIR + "/{}".format(str(user_uuid))
 
 
 def get_absolute_user_dir(user_uuid):
     return os.path.join(settings.SENDFILE_ROOT, get_relative_user_dir(user_uuid))
 
 
-def get_relative_user_dir_file(user_uuid, obj_uuid, ext=''):
+def get_relative_user_dir_file(user_uuid, obj_uuid, ext=""):
     """ Get path relative to `SENDFILE_ROOT`. """
-    return get_relative_user_dir(user_uuid) + '/{}{}'.format(str(obj_uuid), ext)
+    return get_relative_user_dir(user_uuid) + "/{}{}".format(str(obj_uuid), ext)
 
 
 def remove_user_dir_if_empty(user_uuid):
@@ -76,21 +76,21 @@ def clean_string(s):
         cleaned string that can be used as a variable name
     """
     # http://stackoverflow.com/a/3305731
-    return re.sub('\W|^(?=\d)', '_', s)
+    return re.sub("\W|^(?=\d)", "_", s)
 
 
 def compress_file(path_in, path_out):
     # https://stackoverflow.com/a/25729514
-    with open(path_in, 'rb') as f_in:
-        with open(path_out, 'wb') as f_out:
-            gz = gzip.GzipFile('', 'wb', 9, f_out, 0.)
+    with open(path_in, "rb") as f_in:
+        with open(path_out, "wb") as f_out:
+            gz = gzip.GzipFile("", "wb", 9, f_out, 0.0)
             gz.write(f_in.read())
             gz.close()
 
 
 class Individual(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='individuals')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="individuals")
     name = models.CharField(max_length=256)
     openhumans_individual = models.BooleanField(default=False, editable=False)
     locked = models.BooleanField(default=False, editable=False)
@@ -168,13 +168,12 @@ class Individual(models.Model):
         # if len(snps) == 0:
         #     return None
 
-        snps = self.snps.all().order_by('-snp_count')
+        snps = self.snps.all().order_by("-snp_count")
 
         if snps:
             return snps[0]
         else:
             return None
-
 
     def merge_snps(self):
         if not self.snps_can_be_merged:
@@ -192,10 +191,10 @@ class Individual(models.Model):
         with tempfile.TemporaryDirectory() as tmpdir:
             l = Lineage(output_dir=tmpdir, parallelize=False)
 
-            ind = l.create_individual('ind')
+            ind = l.create_individual("ind")
             for snps in self.snps.all():
                 if snps.build != 37:
-                    temp = l.create_individual('temp', snps.file.path)
+                    temp = l.create_individual("temp", snps.file.path)
                     temp.remap_snps(37)
                     temp_snps = temp.save_snps()
                     ind.load_snps(temp_snps)
@@ -208,7 +207,11 @@ class Individual(models.Model):
 
             if ind.snp_count != 0:
                 if len(ind.discrepant_snps) != 0:
-                    dsnps = DiscrepantSnps.objects.create(user=self.user, individual=self, snp_count=len(ind.discrepant_snps))
+                    dsnps = DiscrepantSnps.objects.create(
+                        user=self.user,
+                        individual=self,
+                        snp_count=len(ind.discrepant_snps),
+                    )
                     discrepant_snps_file = ind.save_discrepant_snps()
                     dsnps.file.name = dsnps.get_relative_path()
                     dsnps.save()
@@ -218,8 +221,8 @@ class Individual(models.Model):
                 summary_info, snps_is_valid = parse_snps(merged_snps_file)
 
                 if snps_is_valid:
-                    summary_info['generated_by_lineage'] = True
-                    summary_info['merged'] = True
+                    summary_info["generated_by_lineage"] = True
+                    summary_info["merged"] = True
                     self.add_snps(merged_snps_file, summary_info)
 
     def remap_snps(self):
@@ -239,26 +242,26 @@ class Individual(models.Model):
         with tempfile.TemporaryDirectory() as tmpdir:
             l = Lineage(output_dir=tmpdir, parallelize=False)
 
-            ind = l.create_individual('lineage_NCBI36', snps.file.path)
+            ind = l.create_individual("lineage_NCBI36", snps.file.path)
             ind.remap_snps(36)
             file = ind.save_snps()
 
             summary_info, snps_is_valid = parse_snps(file)
 
             if snps_is_valid:
-                summary_info['generated_by_lineage'] = True
-                summary_info['merged'] = True
+                summary_info["generated_by_lineage"] = True
+                summary_info["merged"] = True
                 self.add_snps(file, summary_info)
 
-            ind = l.create_individual('lineage_GRCh38', snps.file.path)
+            ind = l.create_individual("lineage_GRCh38", snps.file.path)
             ind.remap_snps(38)
             file = ind.save_snps()
 
             summary_info, snps_is_valid = parse_snps(file)
 
             if snps_is_valid:
-                summary_info['generated_by_lineage'] = True
-                summary_info['merged'] = True
+                summary_info["generated_by_lineage"] = True
+                summary_info["merged"] = True
                 self.add_snps(file, summary_info)
 
     def add_snps(self, file, snps_info):
@@ -281,20 +284,25 @@ class Individual(models.Model):
 
 class Snps(models.Model):
     uuid = models.UUIDField(unique=True, default=uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='snps')
-    individual = models.ForeignKey(Individual, on_delete=models.CASCADE, related_name='snps')
-    file = models.FileField(upload_to='uploads/', storage=sendfile_storage)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="snps")
+    individual = models.ForeignKey(
+        Individual, on_delete=models.CASCADE, related_name="snps"
+    )
+    file = models.FileField(upload_to="uploads/", storage=sendfile_storage)
     file_ext = models.CharField(max_length=16, editable=False)
     source = models.CharField(max_length=256, editable=False)
-    assembly = models.CharField(max_length=8, default='GRCh37', editable=False)
+    assembly = models.CharField(max_length=8, default="GRCh37", editable=False)
     build = models.IntegerField(default=37, editable=False)
-    build_detected = models.BooleanField(default=False, verbose_name="Build Detected", editable=False)
+    build_detected = models.BooleanField(
+        default=False, verbose_name="Build Detected", editable=False
+    )
     snp_count = models.IntegerField(default=0, verbose_name="SNP Count", editable=False)
     chromosomes = models.CharField(max_length=256, editable=False)
     merged = models.BooleanField(default=False, verbose_name="Merged", editable=False)
     generated_by_lineage = models.BooleanField(default=False, editable=False)
-    sex = models.CharField(default='', max_length=16, verbose_name="Determined Sex",
-                           editable=False)
+    sex = models.CharField(
+        default="", max_length=16, verbose_name="Determined Sex", editable=False
+    )
     uploaded_at = models.DateTimeField(auto_now_add=True, editable=False)
     # https://stackoverflow.com/a/39725317
     # https://github.com/celery/celery/issues/1813#issuecomment-33142648
@@ -320,20 +328,20 @@ class Snps(models.Model):
 
     def _get_filename_source(self):
         if self.generated_by_lineage:
-            return 'lineage'
+            return "lineage"
         else:
             return self.source
 
     def get_filename(self, include_individual_name=True):
-        s = ''
+        s = ""
         if include_individual_name:
-            s += clean_string(self.individual.name) + '_'
-        s += self._get_filename_source() + '_'
+            s += clean_string(self.individual.name) + "_"
+        s += self._get_filename_source() + "_"
         s += self.assembly + self.file_ext
         return s
 
     def get_url(self):
-        return reverse('download_snps', args=[self.uuid])
+        return reverse("download_snps", args=[self.uuid])
 
     def setup(self, progress_recorder=None):
         summary_info, snps_is_valid = parse_snps(self.file.path)
@@ -342,18 +350,18 @@ class Snps(models.Model):
             self.refresh_from_db()
             os.makedirs(get_absolute_user_dir(self.user.uuid), exist_ok=True)
             original_path = self.file.path
-            if '.zip' in original_path:
-                self.file_ext = '.zip'
-            elif '.csv.gz' in original_path:
-                self.file_ext = '.csv.gz'
-            elif '.txt.gz' in original_path:
-                self.file_ext = '.txt.gz'
-            elif '.gz' in original_path:
-                self.file_ext = '.gz'
-            elif '.csv' in original_path:
-                self.file_ext = '.csv'
+            if ".zip" in original_path:
+                self.file_ext = ".zip"
+            elif ".csv.gz" in original_path:
+                self.file_ext = ".csv.gz"
+            elif ".txt.gz" in original_path:
+                self.file_ext = ".txt.gz"
+            elif ".gz" in original_path:
+                self.file_ext = ".gz"
+            elif ".csv" in original_path:
+                self.file_ext = ".csv"
             else:
-                self.file_ext = '.txt'
+                self.file_ext = ".txt"
             self.file.name = self.get_relative_path()
             shutil.move(original_path, self.file.path)
             self.setup_complete = True
@@ -361,12 +369,19 @@ class Snps(models.Model):
         else:
             self.delete()
 
+
 class DiscrepantSnps(models.Model):
     uuid = models.UUIDField(unique=True, default=uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='discrepant_snps')
-    individual = models.OneToOneField(Individual, on_delete=models.CASCADE, related_name='discrepant_snps')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="discrepant_snps"
+    )
+    individual = models.OneToOneField(
+        Individual, on_delete=models.CASCADE, related_name="discrepant_snps"
+    )
     file = models.FileField(storage=sendfile_storage, editable=False)
-    snp_count = models.IntegerField(default=0, verbose_name="Discrepant SNPs", editable=False)
+    snp_count = models.IntegerField(
+        default=0, verbose_name="Discrepant SNPs", editable=False
+    )
 
     def __str__(self):
         return str(self.uuid)
@@ -380,62 +395,104 @@ class DiscrepantSnps(models.Model):
         return get_relative_user_dir_file(self.user.uuid, self.uuid)
 
     def get_filename(self, include_individual_name=True):
-        s = ''
+        s = ""
         if include_individual_name:
-            s += clean_string(self.individual.name) + '_'
-        s += 'lineage_discrepant_snps.csv'
-        return  s
+            s += clean_string(self.individual.name) + "_"
+        s += "lineage_discrepant_snps.csv"
+        return s
 
     def get_url(self):
-        return reverse('download_discrepant_snps', args=[self.individual.uuid])
+        return reverse("download_discrepant_snps", args=[self.individual.uuid])
+
 
 class SharedDnaGenes(models.Model):
     uuid = models.UUIDField(unique=True, default=uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='shared_dna_genes')
-    individual1 = models.ForeignKey(Individual, on_delete=models.CASCADE,
-                                    related_name='shared_dna_genes_ind1', verbose_name='1st '
-                                                                                       'Individual')
-    individual2 = models.ForeignKey(Individual, on_delete=models.CASCADE,
-                                    related_name='shared_dna_genes_ind2', verbose_name='2nd '
-                                                                                       'Individual')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="shared_dna_genes"
+    )
+    individual1 = models.ForeignKey(
+        Individual,
+        on_delete=models.CASCADE,
+        related_name="shared_dna_genes_ind1",
+        verbose_name="1st " "Individual",
+    )
+    individual2 = models.ForeignKey(
+        Individual,
+        on_delete=models.CASCADE,
+        related_name="shared_dna_genes_ind2",
+        verbose_name="2nd " "Individual",
+    )
     # https://stackoverflow.com/a/12384584
     # https://stackoverflow.com/a/9111694
-    cM_threshold = models.DecimalField(default=0.75, max_digits=5, decimal_places=2,
-                                       validators=[MinValueValidator(0)],
-                                       verbose_name=" cM Threshold")
-    snp_threshold = models.PositiveIntegerField(default=1000, verbose_name="SNP Threshold")
+    cM_threshold = models.DecimalField(
+        default=0.75,
+        max_digits=5,
+        decimal_places=2,
+        validators=[MinValueValidator(0)],
+        verbose_name=" cM Threshold",
+    )
+    snp_threshold = models.PositiveIntegerField(
+        default=1000, verbose_name="SNP Threshold"
+    )
 
     # files with results
     shared_dna_plot_png = models.FileField(storage=sendfile_storage, editable=False)
-    shared_dna_one_chrom_csv = models.FileField(storage=sendfile_storage, editable=False)
-    shared_dna_one_chrom_pickle = models.FileField(storage=sendfile_storage, editable=False)
-    shared_dna_two_chrom_csv = models.FileField(storage=sendfile_storage, editable=False)
-    shared_dna_two_chrom_pickle = models.FileField(storage=sendfile_storage, editable=False)
-    shared_genes_one_chrom_csv = models.FileField(storage=sendfile_storage, editable=False)
-    shared_genes_one_chrom_pickle = models.FileField(storage=sendfile_storage, editable=False)
-    shared_genes_two_chrom_csv = models.FileField(storage=sendfile_storage, editable=False)
-    shared_genes_two_chrom_pickle = models.FileField(storage=sendfile_storage, editable=False)
+    shared_dna_one_chrom_csv = models.FileField(
+        storage=sendfile_storage, editable=False
+    )
+    shared_dna_one_chrom_pickle = models.FileField(
+        storage=sendfile_storage, editable=False
+    )
+    shared_dna_two_chrom_csv = models.FileField(
+        storage=sendfile_storage, editable=False
+    )
+    shared_dna_two_chrom_pickle = models.FileField(
+        storage=sendfile_storage, editable=False
+    )
+    shared_genes_one_chrom_csv = models.FileField(
+        storage=sendfile_storage, editable=False
+    )
+    shared_genes_one_chrom_pickle = models.FileField(
+        storage=sendfile_storage, editable=False
+    )
+    shared_genes_two_chrom_csv = models.FileField(
+        storage=sendfile_storage, editable=False
+    )
+    shared_genes_two_chrom_pickle = models.FileField(
+        storage=sendfile_storage, editable=False
+    )
 
     # summary statistics
-    total_shared_segments_one_chrom = models.PositiveIntegerField(default=0, editable=False)
-    total_shared_segments_two_chrom = models.PositiveIntegerField(default=0, editable=False)
-    total_shared_cMs_one_chrom = models.DecimalField(default=0, max_digits=6, decimal_places=2,
-                                                     editable=False, verbose_name=' cMs Shared '
-                                                                                  'DNA '
-                                                                                  '(1 chrom)')
-    total_shared_cMs_two_chrom = models.DecimalField(default=0, max_digits=6, decimal_places=2,
-                                                     editable=False, verbose_name=' cMs Shared '
-                                                                                  'DNA (2 chrom)')
+    total_shared_segments_one_chrom = models.PositiveIntegerField(
+        default=0, editable=False
+    )
+    total_shared_segments_two_chrom = models.PositiveIntegerField(
+        default=0, editable=False
+    )
+    total_shared_cMs_one_chrom = models.DecimalField(
+        default=0,
+        max_digits=6,
+        decimal_places=2,
+        editable=False,
+        verbose_name=" cMs Shared " "DNA " "(1 chrom)",
+    )
+    total_shared_cMs_two_chrom = models.DecimalField(
+        default=0,
+        max_digits=6,
+        decimal_places=2,
+        editable=False,
+        verbose_name=" cMs Shared " "DNA (2 chrom)",
+    )
     total_snps_one_chrom = models.PositiveIntegerField(default=0, editable=False)
     total_snps_two_chrom = models.PositiveIntegerField(default=0, editable=False)
     total_chrom_one_chrom = models.PositiveIntegerField(default=0, editable=False)
     total_chrom_two_chrom = models.PositiveIntegerField(default=0, editable=False)
-    total_shared_genes_one_chrom = models.PositiveIntegerField(default=0, editable=False,
-                                                               verbose_name='Shared Genes (1 '
-                                                                            'chrom)')
-    total_shared_genes_two_chrom = models.PositiveIntegerField(default=0, editable=False,
-                                                               verbose_name='Shared Genes (2 '
-                                                                            'chrom)')
+    total_shared_genes_one_chrom = models.PositiveIntegerField(
+        default=0, editable=False, verbose_name="Shared Genes (1 " "chrom)"
+    )
+    total_shared_genes_two_chrom = models.PositiveIntegerField(
+        default=0, editable=False, verbose_name="Shared Genes (2 " "chrom)"
+    )
 
     setup_complete = models.BooleanField(default=False, editable=False)
     setup_task_id = models.UUIDField(unique=True, default=uuid4, editable=False)
@@ -464,73 +521,77 @@ class SharedDnaGenes(models.Model):
 
     def get_shared_dna_one_chrom(self):
         df = pd.read_pickle(self.shared_dna_one_chrom_pickle.path)
-        df['segment_col'] = df.index
-        return df.to_dict('records')
+        df["segment_col"] = df.index
+        return df.to_dict("records")
 
     def get_shared_dna_two_chrom(self):
         df = pd.read_pickle(self.shared_dna_two_chrom_pickle.path)
-        df['segment_col'] = df.index
-        return df.to_dict('records')
+        df["segment_col"] = df.index
+        return df.to_dict("records")
 
     def get_shared_dna_plot_png_url(self):
-        return reverse('shared_dna_plot', args=[self.uuid])
+        return reverse("shared_dna_plot", args=[self.uuid])
 
     def get_shared_dna_one_chrom_csv_url(self):
-        return reverse('shared_dna_one_chrom', args=[self.uuid])
+        return reverse("shared_dna_one_chrom", args=[self.uuid])
 
     def get_shared_dna_two_chrom_csv_url(self):
-        return reverse('shared_dna_two_chrom', args=[self.uuid])
+        return reverse("shared_dna_two_chrom", args=[self.uuid])
 
     def get_shared_genes_one_chrom_csv_url(self):
-        return reverse('shared_genes_one_chrom', args=[self.uuid])
+        return reverse("shared_genes_one_chrom", args=[self.uuid])
 
     def get_shared_genes_two_chrom_csv_url(self):
-        return reverse('shared_genes_two_chrom', args=[self.uuid])
+        return reverse("shared_genes_two_chrom", args=[self.uuid])
 
     def _get_individuals_str(self):
-        s = ''
-        s += clean_string(self.individual1.name) + '_'
-        s += clean_string(self.individual2.name) + '_'
+        s = ""
+        s += clean_string(self.individual1.name) + "_"
+        s += clean_string(self.individual2.name) + "_"
         return s
 
     def _get_threshold_str(self):
-        return 'cMs' + clean_string(str(self.cM_threshold)) + '_SNPs' + \
-               clean_string(str(self.snp_threshold))
+        return (
+            "cMs"
+            + clean_string(str(self.cM_threshold))
+            + "_SNPs"
+            + clean_string(str(self.snp_threshold))
+        )
 
     def get_shared_dna_one_chrom_csv_filename(self, include_individual_names=True):
-        s = ''
+        s = ""
         if include_individual_names:
             s += self._get_individuals_str()
-        s += 'shared_dna_one_chrom_GRCh37_'
+        s += "shared_dna_one_chrom_GRCh37_"
         s += self._get_threshold_str()
-        s += '.csv.gz'
+        s += ".csv.gz"
         return s
 
     def get_shared_dna_two_chrom_csv_filename(self, include_individual_names=True):
-        s = ''
+        s = ""
         if include_individual_names:
             s += self._get_individuals_str()
-        s += 'shared_dna_two_chrom_GRCh37_'
+        s += "shared_dna_two_chrom_GRCh37_"
         s += self._get_threshold_str()
-        s += '.csv.gz'
+        s += ".csv.gz"
         return s
 
     def get_shared_genes_one_chrom_csv_filename(self, include_individual_names=True):
-        s = ''
+        s = ""
         if include_individual_names:
             s += self._get_individuals_str()
-        s += 'shared_genes_one_chrom_GRCh37_'
+        s += "shared_genes_one_chrom_GRCh37_"
         s += self._get_threshold_str()
-        s += '.csv.gz'
+        s += ".csv.gz"
         return s
 
     def get_shared_genes_two_chrom_csv_filename(self, include_individual_names=True):
-        s = ''
+        s = ""
         if include_individual_names:
             s += self._get_individuals_str()
-        s += 'shared_genes_two_chrom_GRCh37_'
+        s += "shared_genes_two_chrom_GRCh37_"
         s += self._get_threshold_str()
-        s += '.csv.gz'
+        s += ".csv.gz"
         return s
 
     def find_shared_dna_genes(self, progress_recorder=None):
@@ -544,78 +605,103 @@ class SharedDnaGenes(models.Model):
         with tempfile.TemporaryDirectory() as tmpdir:
             l = Lineage(output_dir=tmpdir, parallelize=False)
 
-            ind1_snps_file = shutil.copy(ind1_snps.file.path, os.path.join(tmpdir, 'ind1_snps' +
-                                                                  ind1_snps.file_ext))
+            ind1_snps_file = shutil.copy(
+                ind1_snps.file.path,
+                os.path.join(tmpdir, "ind1_snps" + ind1_snps.file_ext),
+            )
 
-            ind2_snps_file = shutil.copy(ind2_snps.file.path, os.path.join(tmpdir, 'ind2_snps' +
-                                                                  ind2_snps.file_ext))
+            ind2_snps_file = shutil.copy(
+                ind2_snps.file.path,
+                os.path.join(tmpdir, "ind2_snps" + ind2_snps.file_ext),
+            )
 
             ind1 = l.create_individual(self.individual1.name, ind1_snps_file)
             ind2 = l.create_individual(self.individual2.name, ind2_snps_file)
 
-            shared_dna_one_chrom, shared_dna_two_chrom, shared_genes_one_chrom, shared_genes_two_chrom = \
-                l.find_shared_dna(ind1, ind2, cM_threshold=float(self.cM_threshold),
-                                  snp_threshold=int(self.snp_threshold), shared_genes=True,
-                                  save_output=True)
+            shared_dna_one_chrom, shared_dna_two_chrom, shared_genes_one_chrom, shared_genes_two_chrom = l.find_shared_dna(
+                ind1,
+                ind2,
+                cM_threshold=float(self.cM_threshold),
+                snp_threshold=int(self.snp_threshold),
+                shared_genes=True,
+                save_output=True,
+            )
 
             self.total_shared_segments_one_chrom = len(shared_dna_one_chrom)
             self.total_shared_segments_two_chrom = len(shared_dna_two_chrom)
-            self.total_shared_cMs_one_chrom = Decimal(shared_dna_one_chrom['cMs'].sum())
-            self.total_shared_cMs_two_chrom = Decimal(shared_dna_two_chrom['cMs'].sum())
-            self.total_snps_one_chrom = shared_dna_one_chrom['snps'].sum()
-            self.total_snps_two_chrom = shared_dna_two_chrom['snps'].sum()
-            self.total_chrom_one_chrom = len(shared_dna_one_chrom['chrom'].unique())
-            self.total_chrom_two_chrom = len(shared_dna_two_chrom['chrom'].unique())
+            self.total_shared_cMs_one_chrom = Decimal(shared_dna_one_chrom["cMs"].sum())
+            self.total_shared_cMs_two_chrom = Decimal(shared_dna_two_chrom["cMs"].sum())
+            self.total_snps_one_chrom = shared_dna_one_chrom["snps"].sum()
+            self.total_snps_two_chrom = shared_dna_two_chrom["snps"].sum()
+            self.total_chrom_one_chrom = len(shared_dna_one_chrom["chrom"].unique())
+            self.total_chrom_two_chrom = len(shared_dna_two_chrom["chrom"].unique())
             self.total_shared_genes_one_chrom = len(shared_genes_one_chrom)
             self.total_shared_genes_two_chrom = len(shared_genes_two_chrom)
 
             for root, dirs, files in os.walk(tmpdir):
                 for file in files:
                     file_path = os.path.join(root, file)
-                    if '.png' in file:
-                        self.shared_dna_plot_png.name = \
-                            get_relative_user_dir_file(self.user.uuid, uuid4(), '.png')
+                    if ".png" in file:
+                        self.shared_dna_plot_png.name = get_relative_user_dir_file(
+                            self.user.uuid, uuid4(), ".png"
+                        )
                         shutil.move(file_path, self.shared_dna_plot_png.path)
 
-                    elif 'shared_dna_one_chrom' in file:
-                        self.shared_dna_one_chrom_csv = \
-                            get_relative_user_dir_file(self.user.uuid, uuid4())
+                    elif "shared_dna_one_chrom" in file:
+                        self.shared_dna_one_chrom_csv = get_relative_user_dir_file(
+                            self.user.uuid, uuid4()
+                        )
                         compress_file(file_path, self.shared_dna_one_chrom_csv.path)
 
-                        self.shared_dna_one_chrom_pickle = \
-                            get_relative_user_dir_file(self.user.uuid, uuid4(), '.pkl.gz')
+                        self.shared_dna_one_chrom_pickle = get_relative_user_dir_file(
+                            self.user.uuid, uuid4(), ".pkl.gz"
+                        )
 
-                        shared_dna_one_chrom.to_pickle(self.shared_dna_one_chrom_pickle.path)
+                        shared_dna_one_chrom.to_pickle(
+                            self.shared_dna_one_chrom_pickle.path
+                        )
 
-                    elif 'shared_genes_one_chrom' in file:
-                        self.shared_genes_one_chrom_csv = \
-                            get_relative_user_dir_file(self.user.uuid, uuid4())
+                    elif "shared_genes_one_chrom" in file:
+                        self.shared_genes_one_chrom_csv = get_relative_user_dir_file(
+                            self.user.uuid, uuid4()
+                        )
                         compress_file(file_path, self.shared_genes_one_chrom_csv.path)
 
-                        self.shared_genes_one_chrom_pickle = \
-                            get_relative_user_dir_file(self.user.uuid, uuid4(), '.pkl.gz')
+                        self.shared_genes_one_chrom_pickle = get_relative_user_dir_file(
+                            self.user.uuid, uuid4(), ".pkl.gz"
+                        )
 
-                        shared_genes_one_chrom.to_pickle(self.shared_genes_one_chrom_pickle.path)
+                        shared_genes_one_chrom.to_pickle(
+                            self.shared_genes_one_chrom_pickle.path
+                        )
 
-                    elif 'shared_dna_two_chrom' in file:
-                        self.shared_dna_two_chrom_csv = \
-                            get_relative_user_dir_file(self.user.uuid, uuid4())
+                    elif "shared_dna_two_chrom" in file:
+                        self.shared_dna_two_chrom_csv = get_relative_user_dir_file(
+                            self.user.uuid, uuid4()
+                        )
                         compress_file(file_path, self.shared_dna_two_chrom_csv.path)
 
-                        self.shared_dna_two_chrom_pickle = \
-                            get_relative_user_dir_file(self.user.uuid, uuid4(), '.pkl.gz')
+                        self.shared_dna_two_chrom_pickle = get_relative_user_dir_file(
+                            self.user.uuid, uuid4(), ".pkl.gz"
+                        )
 
-                        shared_dna_two_chrom.to_pickle(self.shared_dna_two_chrom_pickle.path)
+                        shared_dna_two_chrom.to_pickle(
+                            self.shared_dna_two_chrom_pickle.path
+                        )
 
-                    elif 'shared_genes_two_chrom' in file:
-                        self.shared_genes_two_chrom_csv = \
-                            get_relative_user_dir_file(self.user.uuid, uuid4())
+                    elif "shared_genes_two_chrom" in file:
+                        self.shared_genes_two_chrom_csv = get_relative_user_dir_file(
+                            self.user.uuid, uuid4()
+                        )
                         compress_file(file_path, self.shared_genes_two_chrom_csv.path)
 
-                        self.shared_genes_two_chrom_pickle = \
-                            get_relative_user_dir_file(self.user.uuid, uuid4(), '.pkl.gz')
+                        self.shared_genes_two_chrom_pickle = get_relative_user_dir_file(
+                            self.user.uuid, uuid4(), ".pkl.gz"
+                        )
 
-                        shared_genes_two_chrom.to_pickle(self.shared_genes_two_chrom_pickle.path)
+                        shared_genes_two_chrom.to_pickle(
+                            self.shared_genes_two_chrom_pickle.path
+                        )
 
         self.setup_complete = True
         self.save()
@@ -623,27 +709,40 @@ class SharedDnaGenes(models.Model):
 
 class DiscordantSnps(models.Model):
     uuid = models.UUIDField(unique=True, default=uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='discordant_snps')
-    individual1 = models.ForeignKey(Individual, on_delete=models.CASCADE,
-                                    related_name='discordant_snps_ind1',
-                                    verbose_name='1st Individual (Child)')
-    individual2 = models.ForeignKey(Individual, on_delete=models.CASCADE,
-                                    related_name='discordant_snps_ind2',
-                                    verbose_name='2nd Individual (Parent)')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="discordant_snps"
+    )
+    individual1 = models.ForeignKey(
+        Individual,
+        on_delete=models.CASCADE,
+        related_name="discordant_snps_ind1",
+        verbose_name="1st Individual (Child)",
+    )
+    individual2 = models.ForeignKey(
+        Individual,
+        on_delete=models.CASCADE,
+        related_name="discordant_snps_ind2",
+        verbose_name="2nd Individual (Parent)",
+    )
     # https://stackoverflow.com/a/6620137
-    individual3 = models.ForeignKey(Individual, on_delete=models.CASCADE,
-                                    related_name='discordant_snps_ind3',
-                                    verbose_name='3rd Individual (Parent)', blank=True, null=True)
+    individual3 = models.ForeignKey(
+        Individual,
+        on_delete=models.CASCADE,
+        related_name="discordant_snps_ind3",
+        verbose_name="3rd Individual (Parent)",
+        blank=True,
+        null=True,
+    )
 
     discordant_snps_csv = models.FileField(storage=sendfile_storage, editable=False)
     discordant_snps_pickle = models.FileField(storage=sendfile_storage, editable=False)
 
-    total_discordant_snps = models.PositiveIntegerField(default=0, editable=False,
-                                                        verbose_name='Discordant SNPs')
+    total_discordant_snps = models.PositiveIntegerField(
+        default=0, editable=False, verbose_name="Discordant SNPs"
+    )
 
     setup_complete = models.BooleanField(default=False, editable=False)
     setup_task_id = models.UUIDField(unique=True, default=uuid4, editable=False)
-
 
     def __str__(self):
         return str(self.uuid)
@@ -671,23 +770,23 @@ class DiscordantSnps(models.Model):
         super().delete(*args, **kwargs)
 
     def get_discordant_snps_csv_url(self):
-        return reverse('download_discordant_snps', args=[self.uuid])
+        return reverse("download_discordant_snps", args=[self.uuid])
 
     def _get_individuals_str(self):
-        s = ''
-        s += clean_string(self.individual1.name) + '_'
-        s += clean_string(self.individual2.name) + '_'
+        s = ""
+        s += clean_string(self.individual1.name) + "_"
+        s += clean_string(self.individual2.name) + "_"
 
         if self.individual3:
-            s += clean_string(self.individual3.name) + '_'
+            s += clean_string(self.individual3.name) + "_"
 
         return s
 
     def get_discordant_snps_csv_filename(self, include_individual_names=True):
-        s = ''
+        s = ""
         if include_individual_names:
             s += self._get_individuals_str()
-        s += 'discordant_snps_GRCh37.csv.gz'
+        s += "discordant_snps_GRCh37.csv.gz"
         return s
 
     def find_discordant_snps(self, progress_recorder=None):
@@ -708,17 +807,21 @@ class DiscordantSnps(models.Model):
         with tempfile.TemporaryDirectory() as tmpdir:
             l = Lineage(output_dir=tmpdir, parallelize=False)
 
-            ind1_snps_file = shutil.copy(ind1_snps.file.path, os.path.join(tmpdir, 'ind1_snps' +
-                                                                              ind1_snps.file_ext))
+            ind1_snps_file = shutil.copy(
+                ind1_snps.file.path,
+                os.path.join(tmpdir, "ind1_snps" + ind1_snps.file_ext),
+            )
 
-            ind2_snps_file = shutil.copy(ind2_snps.file.path, os.path.join(tmpdir, 'ind2_snps' +
-                                                                              ind2_snps.file_ext))
+            ind2_snps_file = shutil.copy(
+                ind2_snps.file.path,
+                os.path.join(tmpdir, "ind2_snps" + ind2_snps.file_ext),
+            )
 
             if self.individual3:
-                ind3_snps_file = shutil.copy(ind3_snps.file.path, os.path.join(tmpdir,
-                                                                               'ind3_snps' +
-                                                                               ind3_snps.file_ext))
-
+                ind3_snps_file = shutil.copy(
+                    ind3_snps.file.path,
+                    os.path.join(tmpdir, "ind3_snps" + ind3_snps.file_ext),
+                )
 
             ind1 = l.create_individual(self.individual1.name, ind1_snps_file)
             ind2 = l.create_individual(self.individual2.name, ind2_snps_file)
@@ -735,13 +838,15 @@ class DiscordantSnps(models.Model):
             for root, dirs, files in os.walk(tmpdir):
                 for file in files:
                     file_path = os.path.join(root, file)
-                    if 'discordant_snps' in file:
-                        self.discordant_snps_csv.name = \
-                            get_relative_user_dir_file(self.user.uuid, uuid4())
+                    if "discordant_snps" in file:
+                        self.discordant_snps_csv.name = get_relative_user_dir_file(
+                            self.user.uuid, uuid4()
+                        )
                         compress_file(file_path, self.discordant_snps_csv.path)
 
-                        self.discordant_snps_pickle = \
-                            get_relative_user_dir_file(self.user.uuid, uuid4(), '.pkl.gz')
+                        self.discordant_snps_pickle = get_relative_user_dir_file(
+                            self.user.uuid, uuid4(), ".pkl.gz"
+                        )
                         discordant_snps.to_pickle(self.discordant_snps_pickle.path)
 
                         break

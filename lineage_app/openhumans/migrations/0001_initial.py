@@ -9,20 +9,29 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-    ]
+    dependencies = [migrations.swappable_dependency(settings.AUTH_USER_MODEL)]
 
     operations = [
         migrations.CreateModel(
-            name='OpenHumansMember',
+            name="OpenHumansMember",
             fields=[
-                ('oh_id', models.CharField(max_length=16, primary_key=True, serialize=False, unique=True)),
-                ('access_token', models.CharField(max_length=256)),
-                ('refresh_token', models.CharField(max_length=256)),
-                ('token_expires', models.DateTimeField()),
-                ('public', models.BooleanField(default=False)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "oh_id",
+                    models.CharField(
+                        max_length=16, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                ("access_token", models.CharField(max_length=256)),
+                ("refresh_token", models.CharField(max_length=256)),
+                ("token_expires", models.DateTimeField()),
+                ("public", models.BooleanField(default=False)),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
-        ),
+        )
     ]

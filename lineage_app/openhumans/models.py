@@ -19,7 +19,7 @@ def make_unique_username(base):
         return base
     counter = 2
     while True:
-        name = base + '_' + str(counter)
+        name = base + "_" + str(counter)
         try:
             User.objects.get(username=name)
             counter += 1
@@ -32,6 +32,7 @@ class OpenHumansMember(models.Model):
     Store OAuth2 data for Open Humans member.
     A User account is created for this Open Humans member.
     """
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     oh_id = models.CharField(max_length=16, primary_key=True, unique=True)
     access_token = models.CharField(max_length=256)
@@ -45,32 +46,32 @@ class OpenHumansMember(models.Model):
 
     @classmethod
     def create(cls, oh_id, data):
-        new_username = make_unique_username(
-            base='openhumans_{}'.format(oh_id))
+        new_username = make_unique_username(base="openhumans_{}".format(oh_id))
         new_user = User.objects.create_user(new_username)
         oh_member = cls(
             user=new_user,
             oh_id=oh_id,
             access_token=data["access_token"],
             refresh_token=data["refresh_token"],
-            token_expires=cls.get_expiration(data["expires_in"]))
+            token_expires=cls.get_expiration(data["expires_in"]),
+        )
         return oh_member
 
     def __str__(self):
-        return "<OpenHumansMember(oh_id='{}')>".format(
-            self.oh_id)
+        return "<OpenHumansMember(oh_id='{}')>".format(self.oh_id)
 
-    def get_access_token(self,
-                         client_id=settings.OPENHUMANS_CLIENT_ID,
-                         client_secret=settings.OPENHUMANS_CLIENT_SECRET):
+    def get_access_token(
+        self,
+        client_id=settings.OPENHUMANS_CLIENT_ID,
+        client_secret=settings.OPENHUMANS_CLIENT_SECRET,
+    ):
         """
         Return access token. Refresh first if necessary.
         """
         # Also refresh if nearly expired (less than 60s remaining).
         delta = timedelta(seconds=60)
         if arrow.get(self.token_expires) - delta < arrow.now():
-            self._refresh_tokens(client_id=client_id,
-                                 client_secret=client_secret)
+            self._refresh_tokens(client_id=client_id, client_secret=client_secret)
         return self.access_token
 
     def _refresh_tokens(self, client_id, client_secret):
@@ -78,14 +79,13 @@ class OpenHumansMember(models.Model):
         Refresh access token.
         """
         response = requests.post(
-            'https://www.openhumans.org/oauth2/token/',
-            data={
-                'grant_type': 'refresh_token',
-                'refresh_token': self.refresh_token},
-            auth=requests.auth.HTTPBasicAuth(client_id, client_secret))
+            "https://www.openhumans.org/oauth2/token/",
+            data={"grant_type": "refresh_token", "refresh_token": self.refresh_token},
+            auth=requests.auth.HTTPBasicAuth(client_id, client_secret),
+        )
         if response.status_code == 200:
             data = response.json()
-            self.access_token = data['access_token']
-            self.refresh_token = data['refresh_token']
-            self.token_expires = self.get_expiration(data['expires_in'])
+            self.access_token = data["access_token"]
+            self.refresh_token = data["refresh_token"]
+            self.token_expires = self.get_expiration(data["expires_in"])
             self.save()

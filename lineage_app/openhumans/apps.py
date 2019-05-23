@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class OpenHumansConfig(AppConfig):
-    name = 'lineage_app.openhumans'
+    name = "lineage_app.openhumans"
