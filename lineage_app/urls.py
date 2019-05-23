@@ -8,15 +8,9 @@ import os
 from . import views
 
 urlpatterns = [
+    path("", TemplateView.as_view(template_name="pages/index.html"), name="index"),
     path(
-        "",
-        TemplateView.as_view(template_name="pages/index.html"),
-        name="index",
-    ),
-    path(
-        "about/",
-        TemplateView.as_view(template_name="pages/about.html"),
-        name="about",
+        "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
     ),
     path(
         "acknowledgements/",
@@ -33,51 +27,23 @@ urlpatterns = [
         TemplateView.as_view(template_name="pages/data-use.html"),
         name="data-use-policy",
     ),
-    path(
-        "individuals/",
-        views.individuals,
-        name="individuals",
-    ),
+    path("individuals/", views.individuals, name="individuals"),
     path(
         "individuals/delete/<uuid:uuid>",
         views.delete_individual,
         name="delete_individual",
     ),
-    path(
-        "individuals/edit/<uuid:uuid>",
-        views.edit_individual,
-        name="edit_individual",
-    ),
-    path(
-        "individuals/add/",
-        views.add_individual,
-        name="add_individual",
-    ),
-    path(
-        "individuals/upload/<uuid:uuid>",
-        views.upload_snps,
-        name="upload_snps",
-    ),
-    path(
-        "snps/download/<uuid:uuid>",
-        views.download_snps,
-        name="download_snps",
-    ),
-    path(
-        "snps/delete/<uuid:uuid>",
-        views.delete_snps,
-        name="delete_snps",
-    ),
+    path("individuals/edit/<uuid:uuid>", views.edit_individual, name="edit_individual"),
+    path("individuals/add/", views.add_individual, name="add_individual"),
+    path("individuals/upload/<uuid:uuid>", views.upload_snps, name="upload_snps"),
+    path("snps/download/<uuid:uuid>", views.download_snps, name="download_snps"),
+    path("snps/delete/<uuid:uuid>", views.delete_snps, name="delete_snps"),
     path(
         "discrepant-snps/download/<uuid:uuid>",
         views.download_discrepant_snps,
         name="download_discrepant_snps",
     ),
-    path(
-        "shared-dna-genes/",
-        views.shared_dna_genes,
-        name="shared_dna_genes",
-    ),
+    path("shared-dna-genes/", views.shared_dna_genes, name="shared_dna_genes"),
     path(
         "shared-dna-genes/delete/<uuid:uuid>",
         views.delete_shared_dna_genes,
@@ -113,11 +79,7 @@ urlpatterns = [
         views.shared_genes_two_chrom,
         name="shared_genes_two_chrom",
     ),
-    path(
-        "discordant-snps/",
-        views.discordant_snps,
-        name="discordant_snps",
-    ),
+    path("discordant-snps/", views.discordant_snps, name="discordant_snps"),
     path(
         "discordant-snps/delete/<uuid:uuid>",
         views.delete_discordant_snps,
@@ -128,38 +90,34 @@ urlpatterns = [
         views.download_discordant_snps,
         name="download_discordant_snps",
     ),
-    path('ajax/load-individual2/',
-         views.load_individual2_dropdown,
-         name='load_individual2_dropdown'),
-    path('ajax/load-individual3/',
-         views.load_individual3_dropdown,
-         name='load_individual3_dropdown'),
     path(
-        "users/",
-        include("lineage_app.users.urls", namespace="users"),
+        "ajax/load-individual2/",
+        views.load_individual2_dropdown,
+        name="load_individual2_dropdown",
     ),
     path(
-        "robots.txt",
-        views.robots,
-        name="robots",
+        "ajax/load-individual3/",
+        views.load_individual3_dropdown,
+        name="load_individual3_dropdown",
     ),
-    path(
-        "tasks/",
-        include("celery_progress.urls", namespace="celery-progress")
-    ),
+    path("users/", include("lineage_app.users.urls", namespace="users")),
+    path("robots.txt", views.robots, name="robots"),
+    path("tasks/", include("celery_progress.urls", namespace="celery-progress")),
 ]
 
-if os.environ.get('DJANGO_SETTINGS_MODULE') == 'lineage_app.settings.production':
+if os.environ.get("DJANGO_SETTINGS_MODULE") == "lineage_app.settings.production":
     # https://docs.sentry.io/enriching-error-data/user-feedback/?platform=django
     from django.shortcuts import render
     from sentry_sdk import last_event_id
 
-
     def handler500(request, *args, **argv):
-        return render(request, "500.html", {
-            'sentry_event_id': last_event_id(),
-            'sentry_dsn': settings.SENTRY_DSN
-        }, status=500)
+        return render(
+            request,
+            "500.html",
+            {"sentry_event_id": last_event_id(), "sentry_dsn": settings.SENTRY_DSN},
+            status=500,
+        )
+
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit

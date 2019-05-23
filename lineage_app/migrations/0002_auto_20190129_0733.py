@@ -6,29 +6,46 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('lineage_app', '0001_initial'),
-    ]
+    dependencies = [("lineage_app", "0001_initial")]
 
     operations = [
         migrations.AlterField(
-            model_name='discordantsnps',
-            name='individual1',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='discordant_snps_ind1', to='lineage_app.Individual', verbose_name='1st Individual (Child)'),
+            model_name="discordantsnps",
+            name="individual1",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="discordant_snps_ind1",
+                to="lineage_app.Individual",
+                verbose_name="1st Individual (Child)",
+            ),
         ),
         migrations.AlterField(
-            model_name='discordantsnps',
-            name='individual2',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='discordant_snps_ind2', to='lineage_app.Individual', verbose_name='2nd Individual (Parent)'),
+            model_name="discordantsnps",
+            name="individual2",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="discordant_snps_ind2",
+                to="lineage_app.Individual",
+                verbose_name="2nd Individual (Parent)",
+            ),
         ),
         migrations.AlterField(
-            model_name='discordantsnps',
-            name='individual3',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='discordant_snps_ind3', to='lineage_app.Individual', verbose_name='3rd Individual (Parent)'),
+            model_name="discordantsnps",
+            name="individual3",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="discordant_snps_ind3",
+                to="lineage_app.Individual",
+                verbose_name="3rd Individual (Parent)",
+            ),
         ),
         migrations.AlterField(
-            model_name='discordantsnps',
-            name='total_discordant_snps',
-            field=models.PositiveIntegerField(default=0, editable=False, verbose_name='Discordant SNPs'),
+            model_name="discordantsnps",
+            name="total_discordant_snps",
+            field=models.PositiveIntegerField(
+                default=0, editable=False, verbose_name="Discordant SNPs"
+            ),
         ),
     ]

@@ -28,8 +28,7 @@ class SendFileFileSystemStorage(FileSystemStorage):
     """
 
     def __init__(self, **kwargs):
-        kwargs.update({
-            'location': settings.SENDFILE_ROOT,
-            'file_permissions_mode': 0o640,
-        })
+        kwargs.update(
+            {"location": settings.SENDFILE_ROOT, "file_permissions_mode": 0o640}
+        )
         super(SendFileFileSystemStorage, self).__init__(**kwargs)

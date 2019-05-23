@@ -17,19 +17,19 @@ User = get_user_model()
 def get_all_individuals_context(user_id):
     user = User.objects.get(id=user_id)
     individuals = []
-    for individual in user.individuals.all().order_by('created_at'):
+    for individual in user.individuals.all().order_by("created_at"):
         individuals.append(get_individual_context(individual.pk))
-    return {'individuals': individuals}
+    return {"individuals": individuals}
 
 
 def get_individual_context(individual_id):
     individual = Individual.objects.get(pk=individual_id)
-    return {'obj': individual, 'snps': individual.snps.all().order_by('id')}
+    return {"obj": individual, "snps": individual.snps.all().order_by("id")}
 
 
 def get_individual_snps(individual_id):
     individual = Individual.objects.get(pk=individual_id)
-    return individual.snps.all().order_by('source').values('id', 'source')
+    return individual.snps.all().order_by("source").values("id", "source")
 
 
 def setup_oh_individual(individual_id, progress_recorder):
@@ -41,9 +41,9 @@ def setup_oh_individual(individual_id, progress_recorder):
         try:
             progress_recorder.set_progress(1, 6)  # download data
 
-            ohapi.command_line.download(directory=tmpdir,
-                                        access_token=user.openhumansmember.get_access_token())
-
+            ohapi.command_line.download(
+                directory=tmpdir, access_token=user.openhumansmember.get_access_token()
+            )
 
             progress_recorder.set_progress(2, 6)  # analyze files
 
@@ -76,17 +76,17 @@ def setup_oh_individual(individual_id, progress_recorder):
 
 def clean_ancestry_files(ancestry_files):
     for file in ancestry_files:
-        temp = os.path.join(os.path.dirname(file), 'temp.txt')
-        with open(file, 'r') as f_in, open(temp, 'w') as f_out:
+        temp = os.path.join(os.path.dirname(file), "temp.txt")
+        with open(file, "r") as f_in, open(temp, "w") as f_out:
             lines = f_in.readlines()
             count = 0
 
             for line in lines:
                 count += 1
-                if 'rsid' in line:
-                    if 'allele2r' in line:
-                        line1, line2 = line.split('allele2')
-                        line1 += 'allele2\n'
+                if "rsid" in line:
+                    if "allele2r" in line:
+                        line1, line2 = line.split("allele2")
+                        line1 += "allele2\n"
                         f_out.write(line1)
                         f_out.write(line2)
                     else:
@@ -109,10 +109,10 @@ def get_paths_to_downloaded_data_files(path):
         if len(item[2]) > 0:  # if one or more files
             for file in item[2]:
                 file_path = os.path.join(item[0], file)
-                if '.txt' in file or '.csv' in file:
+                if ".txt" in file or ".csv" in file:
                     data_files.append(file_path)  # found a raw data file
 
-                if 'Ancestry' in file and '.txt' in file:
+                if "Ancestry" in file and ".txt" in file:
                     ancestry_files.append(file_path)
 
     # add new-line character to early OH ancestry files
@@ -127,45 +127,63 @@ def upload_files(individual):
     with tempfile.TemporaryDirectory() as tmpdir:
         snps = individual.snps.filter(Q(generated_by_lineage=True) & Q(build=37))
         if snps:
-            lineage_GRCh37 = os.path.join(tmpdir, 'lineage_GRCh37.csv')
+            lineage_GRCh37 = os.path.join(tmpdir, "lineage_GRCh37.csv")
             shutil.copy(snps[0].file.path, lineage_GRCh37)
 
-            files_to_upload.append({'file': lineage_GRCh37, 'tags': ['snps', 'genotype', 'GRCh37',
-                                                                     'Build 37', 'lineage'],
-                                'description': 'SNPs merged (if applicable) and mapped relative to '
-                                               'the GRCh37 assembly'})
+            files_to_upload.append(
+                {
+                    "file": lineage_GRCh37,
+                    "tags": ["snps", "genotype", "GRCh37", "Build 37", "lineage"],
+                    "description": "SNPs merged (if applicable) and mapped relative to "
+                    "the GRCh37 assembly",
+                }
+            )
 
         snps = individual.snps.filter(Q(generated_by_lineage=True) & Q(build=36))
         if snps:
-            lineage_NCBI36 = os.path.join(tmpdir, 'lineage_NCBI36.csv')
+            lineage_NCBI36 = os.path.join(tmpdir, "lineage_NCBI36.csv")
             shutil.copy(snps[0].file.path, lineage_NCBI36)
 
-            files_to_upload.append({'file': lineage_NCBI36, 'tags': ['snps', 'genotype', 'NCBI36',
-                                                                     'Build 36', 'lineage'],
-                                'description': 'SNPs merged (if applicable) and mapped relative to '
-                                               'the NCBI36 assembly'})
+            files_to_upload.append(
+                {
+                    "file": lineage_NCBI36,
+                    "tags": ["snps", "genotype", "NCBI36", "Build 36", "lineage"],
+                    "description": "SNPs merged (if applicable) and mapped relative to "
+                    "the NCBI36 assembly",
+                }
+            )
 
         snps = individual.snps.filter(Q(generated_by_lineage=True) & Q(build=38))
         if snps:
-            lineage_GRCh38 = os.path.join(tmpdir, 'lineage_GRCh38.csv')
+            lineage_GRCh38 = os.path.join(tmpdir, "lineage_GRCh38.csv")
             shutil.copy(snps[0].file.path, lineage_GRCh38)
 
-            files_to_upload.append({'file': lineage_GRCh38, 'tags': ['snps', 'genotype', 'GRCh38',
-                                                                     'Build 38', 'lineage'],
-                                'description': 'SNPs merged (if applicable) and mapped relative to '
-                                               'the GRCh38 assembly'})
+            files_to_upload.append(
+                {
+                    "file": lineage_GRCh38,
+                    "tags": ["snps", "genotype", "GRCh38", "Build 38", "lineage"],
+                    "description": "SNPs merged (if applicable) and mapped relative to "
+                    "the GRCh38 assembly",
+                }
+            )
 
         discrepant_snps = individual.get_discrepant_snps()
         if discrepant_snps:
-            discrepant_snps_file = os.path.join(tmpdir, 'lineage_discrepant_snps.csv')
+            discrepant_snps_file = os.path.join(tmpdir, "lineage_discrepant_snps.csv")
             shutil.copy(discrepant_snps.file.path, discrepant_snps_file)
 
-            files_to_upload.append({'file': discrepant_snps_file, 'tags': ['snps', 'lineage'],
-                            'description': 'Discrepant SNPs found while merging files'})
-
+            files_to_upload.append(
+                {
+                    "file": discrepant_snps_file,
+                    "tags": ["snps", "lineage"],
+                    "description": "Discrepant SNPs found while merging files",
+                }
+            )
 
         for file in files_to_upload:
-            upload_file_oh(file['file'], individual.user.id, file['tags'], file['description'])
+            upload_file_oh(
+                file["file"], individual.user.id, file["tags"], file["description"]
+            )
 
 
 def upload_file_oh(path, user_id, tags, description):
@@ -183,19 +201,25 @@ def upload_file_oh(path, user_id, tags, description):
     """
     user = User.objects.get(id=user_id)
 
-    ohapi.api.upload_file(target_filepath=path,
-                          metadata={'tags': tags, 'description': description},
-                          access_token=user.openhumansmember.get_access_token())
+    ohapi.api.upload_file(
+        target_filepath=path,
+        metadata={"tags": tags, "description": description},
+        access_token=user.openhumansmember.get_access_token(),
+    )
 
 
 def shared_dna_genes_calc_exists(d):
-    if d['individual1'].shared_dna_genes_ind1.filter(Q(individual2=d['individual2']) &
-                                                     Q(cM_threshold=d['cM_threshold']) &
-                                                     Q(snp_threshold=d['snp_threshold'])):
+    if d["individual1"].shared_dna_genes_ind1.filter(
+        Q(individual2=d["individual2"])
+        & Q(cM_threshold=d["cM_threshold"])
+        & Q(snp_threshold=d["snp_threshold"])
+    ):
         return True
-    elif d['individual2'].shared_dna_genes_ind1.filter(Q(individual2=d['individual1']) &
-                                                       Q(cM_threshold=d['cM_threshold']) &
-                                                       Q(snp_threshold=d['snp_threshold'])):
+    elif d["individual2"].shared_dna_genes_ind1.filter(
+        Q(individual2=d["individual1"])
+        & Q(cM_threshold=d["cM_threshold"])
+        & Q(snp_threshold=d["snp_threshold"])
+    ):
         return True
 
     return False

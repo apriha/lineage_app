@@ -14,26 +14,25 @@ Quick Start
 Follow these steps to get ``lineage_app`` up and running locally for development and/or debugging:
 
 - Clone or download this repository
+- Install `Pipenv <https://github.com/pypa/pipenv>`_
 - ``cd`` to the top level of the repository (i.e., the top most ``lineage_app`` directory)
-- `Create <https://packaging.python.org/guides/installing-using-pip-and-virtualenv/#creating-a-virtualenv>`_ a ``virtualenv``
-- `Activate <https://packaging.python.org/guides/installing-using-pip-and-virtualenv/#activating-a-virtualenv>`_ the ``virtualenv``
 - Install the requirements for local development
 
-  - ``(venv) $ pip install -r requirements/local.txt``
+  - ``$ pipenv install --dev``
 
 - Make the migrations
 
-  - ``(venv) $ python manage.py migrate``
+  - ``$ pipenv run python manage.py migrate``
   - ``db.sqlite3`` will be created and used for the database
 
 - Run ``celery`` in a Terminal
 
-  - ``(venv) $ celery worker --workdir=$PWD --app=lineage_app.taskapp --loglevel=info``
+  - ``$ pipenv run celery worker --workdir="$PWD" --app=lineage_app.taskapp --loglevel=info``
   - ``celery`` handles the long-running tasks
 
 - Run the web server in a different Terminal
 
-  - ``(venv) $ python manage.py runserver``
+  - ``$ pipenv run python manage.py runserver``
   - ``lineage_app`` will be available at http://127.0.0.1:8000/
 
 - Click the "Debug Login" link to start using the web app
