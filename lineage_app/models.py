@@ -195,7 +195,7 @@ class Individual(models.Model):
             for snps in self.snps.all():
                 if snps.build != 37:
                     temp = l.create_individual("temp", snps.file.path)
-                    temp.remap_snps(37)
+                    temp.remap_snps(37, parallelize=False)
                     temp_snps = temp.save_snps()
                     ind.load_snps(temp_snps)
                     del temp
@@ -243,7 +243,7 @@ class Individual(models.Model):
             l = Lineage(output_dir=tmpdir, parallelize=False)
 
             ind = l.create_individual("lineage_NCBI36", snps.file.path)
-            ind.remap_snps(36)
+            ind.remap_snps(36, parallelize=False)
             file = ind.save_snps()
 
             summary_info, snps_is_valid = parse_snps(file)
@@ -254,7 +254,7 @@ class Individual(models.Model):
                 self.add_snps(file, summary_info)
 
             ind = l.create_individual("lineage_GRCh38", snps.file.path)
-            ind.remap_snps(38)
+            ind.remap_snps(38, parallelize=False)
             file = ind.save_snps()
 
             summary_info, snps_is_valid = parse_snps(file)
