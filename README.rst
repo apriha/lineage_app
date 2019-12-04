@@ -44,7 +44,7 @@ This web app was made possible thanks to a project grant from `Open Humans <http
 
 License
 -------
-Copyright (C) 2019 Scedastic Software, LLC
+Copyright (C) 2019 Andrew Riha
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
