@@ -10,7 +10,7 @@ from sentry_sdk.integrations.celery import CeleryIntegration
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["lineage.openhumans.org"])
 
 # DATABASES
 # ------------------------------------------------------------------------------
@@ -72,7 +72,7 @@ TEMPLATES[0]["OPTIONS"]["loaders"] = [  # noqa F405
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
 DEFAULT_FROM_EMAIL = env(
-    "DJANGO_DEFAULT_FROM_EMAIL", default=""
+    "DJANGO_DEFAULT_FROM_EMAIL", default="Lineage / Open Humans Support <support@openhumans.org>"
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
@@ -97,7 +97,7 @@ sentry_sdk.init(dsn=SENTRY_DSN, integrations=[DjangoIntegration(), CeleryIntegra
 
 # Open Humans
 # ------------------------------------------------------------------------------
-OPENHUMANS_APP_BASE_URL = ""
+OPENHUMANS_APP_BASE_URL = "https://lineage.openhumans.org"
 OPENHUMANS_REDIRECT_URI = OPENHUMANS_APP_BASE_URL + OPENHUMANS_REDIRECT_VIEW
 
 # SENDFILE settings
